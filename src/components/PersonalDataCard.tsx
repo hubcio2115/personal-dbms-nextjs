@@ -1,9 +1,10 @@
 import { type PersonalData } from '@prisma/client';
 import Link from 'next/link';
+import { type FC } from 'react';
 
 type PersonalDataProps = PersonalData;
 
-const PersonalDataCard = ({
+const PersonalDataCard: FC<PersonalDataProps> = ({
   id,
   firstName,
   lastName,
