@@ -12,7 +12,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Personal Data CMS</title>
+        <title>Personal Data DBMS</title>
         <meta name="description" content="Project I've made" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
