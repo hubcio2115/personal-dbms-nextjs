@@ -9,6 +9,10 @@ import superjson from 'superjson';
 import { createContextInner } from '../server/trpc/context';
 import { trpc } from '../utils/trpc';
 import { prisma } from '../server/db/client';
+import MainLayout from '../components/MainLayout';
+import { type PersonalData } from '@prisma/client';
+import { splitLowerCamelCase } from '../utils/[id]';
+import Link from 'next/link';
 
 export const getStaticProps = async (
   context: GetStaticPropsContext<{ id: string }>,
@@ -50,9 +54,36 @@ const User = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data } = trpc.personalData.byId.useQuery(id);
 
   return (
-    <>
-      <h1>{data?.firstName}</h1>
-    </>
+    <MainLayout className="mt-2 flex-col items-center justify-center md:mt-0">
+      <div className="flex flex-auto flex-col justify-center gap-6 md:w-1/2 xl:w-1/3">
+        <Link href="/">
+          <button className="btn self-start">&#8592; back</button>
+        </Link>
+        <div className="card w-full bg-primary xl:mb-24">
+          <div className="card-body">
+            {!!data
+              ? Object.keys(data).reduce(
+                  (acc: JSX.Element[], key: string, index) => {
+                    if (key === 'id') return acc;
+
+                    const label = splitLowerCamelCase(key);
+                    return [
+                      ...acc,
+                      <p
+                        className="text- card-title text-primary-content"
+                        key={index}
+                      >
+                        {`${label}: `} {data[key as keyof PersonalData]}
+                      </p>,
+                    ];
+                  },
+                  [],
+                )
+              : null}
+          </div>
+        </div>
+      </div>
+    </MainLayout>
   );
 };
 
