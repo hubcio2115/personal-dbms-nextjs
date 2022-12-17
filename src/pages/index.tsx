@@ -4,7 +4,7 @@ import { clsx } from 'clsx';
 
 import PersonalDataCard from '../components/PersonalDataCard';
 import { trpc } from '../utils/trpc';
-import NavBar from '../components/NavBar';
+import MainLayout from '../components/MainLayout';
 
 const Home: NextPage = () => {
   const { data } = trpc.personalData.getAll.useQuery();
@@ -16,24 +16,21 @@ const Home: NextPage = () => {
         <meta name="description" content="Project I've made" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <nav>
-        <NavBar />
-      </nav>
 
-      <main className="min-h-screen">
+      <MainLayout>
         <div
           className={clsx(
             !!data
-              ? 'gird-cols-1 container mx-auto inline-grid gap-4 py-16 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+              ? 'gird-cols-1 grid gap-4 py-8  md:grid-cols-2 md:py-16 lg:grid-cols-3 xl:grid-cols-4'
               : 'flex items-center justify-center',
-            'container min-h-full min-w-full',
+            'flex-auto',
           )}
         >
           {data?.map((personalData) => (
             <PersonalDataCard key={personalData.id} {...personalData} />
           )) ?? <progress className="progress progress-primary w-56" />}
         </div>
-      </main>
+      </MainLayout>
     </>
   );
 };
