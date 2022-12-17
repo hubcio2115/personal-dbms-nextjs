@@ -18,13 +18,13 @@ export const personalDataRouter = router({
 
   delete: publicProcedure
     .input(z.string())
-    .query(({ ctx, input: id }) =>
+    .mutation(({ ctx, input: id }) =>
       ctx.prisma.personalData.delete({ where: { id } }),
     ),
 
   update: publicProcedure
     .input(personalDataSchemaWithId)
-    .query(({ ctx, input: data }) =>
+    .mutation(({ ctx, input: data }) =>
       ctx.prisma.personalData.update({
         where: { id: data.id },
         data,
@@ -33,5 +33,7 @@ export const personalDataRouter = router({
 
   create: publicProcedure
     .input(basePersonalDataSchema)
-    .query(({ ctx, input: data }) => ctx.prisma.personalData.create({ data })),
+    .mutation(({ ctx, input: data }) =>
+      ctx.prisma.personalData.create({ data }),
+    ),
 });
