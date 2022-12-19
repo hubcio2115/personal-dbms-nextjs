@@ -42,7 +42,7 @@ const Admin: NextPage = () => {
 
       <MainLayout>
         <form
-          className="flex h-screen w-full items-center justify-center"
+          className="flex w-full flex-auto items-center justify-center"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="card w-96 bg-base-100 shadow-xl">
