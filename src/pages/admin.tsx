@@ -1,23 +1,38 @@
 import { type NextPage } from 'next';
-import Head from 'next/head';
-import { useCallback } from 'react';
-import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
+import { type Login, loginSchema } from '../common/validation/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-import { loginSchema, type Login } from '../server/common/auth';
+import { signIn } from 'next-auth/react';
+import { useCallback } from 'react';
+import Head from 'next/head';
 import MainLayout from '../components/MainLayout';
 
-const admin: NextPage = () => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { register, handleSubmit } = useForm<Login>({
+const Admin: NextPage = () => {
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm<Login>({
+    defaultValues: {
+      username: '',
+      password: '',
+    },
     resolver: zodResolver(loginSchema),
   });
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const onSubmit = useCallback(async (data: Login) => {
-    await signIn('credentials', { ...data, callbackUrl: '/' });
-  }, []);
+  const onSubmit = useCallback(
+    async (data: Login) => {
+      try {
+        const res = await signIn('credentials', { ...data, callbackUrl: '/' });
+        console.log(res);
+        reset();
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    [reset],
+  );
 
   return (
     <>
@@ -27,26 +42,34 @@ const admin: NextPage = () => {
 
       <MainLayout>
         <form
-          className="flex w-full flex-auto items-center justify-center"
+          className="flex h-screen w-full items-center justify-center"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="card w-96 bg-neutral shadow-xl">
+          <div className="card w-96 bg-base-100 shadow-xl">
             <div className="card-body">
-              <h2 className="card-title">Login:</h2>
+              <h2 className="card-title">Login Page</h2>
 
-              <input
-                type="text"
-                placeholder="Type your username..."
-                className="input-bordered input mt-2 w-full max-w-xs"
-                {...register('username')}
-              />
+              <div>
+                <input
+                  type="text"
+                  placeholder="Type your username..."
+                  className="input-bordered input w-full max-w-xs"
+                  {...register('username')}
+                />
 
-              <input
-                type="password"
-                placeholder="Type your password..."
-                className="input-bordered input my-2 w-full max-w-xs"
-                {...register('password')}
-              />
+                {!!errors.username ? <p>{errors.username.message}</p> : null}
+              </div>
+
+              <div>
+                <input
+                  type="password"
+                  placeholder="Type your password..."
+                  className="input-bordered input my-2 w-full max-w-xs"
+                  {...register('password')}
+                />
+
+                {!!errors.password ? <p>{errors.password.message}</p> : null}
+              </div>
 
               <div className="card-actions items-center justify-between">
                 <button className="btn-secondary btn" type="submit">
@@ -61,4 +84,4 @@ const admin: NextPage = () => {
   );
 };
 
-export default admin;
+export default Admin;
