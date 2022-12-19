@@ -8,11 +8,28 @@ import { loginSchema } from '../../../server/common/auth';
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
-    session({ session, user }) {
-      if (!!session.user) session.user.id = user.id;
+    session({ session, token }) {
+      if (!!token) {
+        session.user.userId = token.userId;
+        session.user.username = token.username;
+      }
 
       return session;
     },
+    jwt: async ({ token, user }) => {
+      if (!!user) {
+        token.userId = user.id;
+        token.username = user.username;
+      }
+
+      return token;
+    },
+  },
+  jwt: {
+    maxAge: 1 * 24 * 30 * 60,
+  },
+  pages: {
+    signIn: '/admin',
   },
   // Configure one or more authentication providers
   providers: [
