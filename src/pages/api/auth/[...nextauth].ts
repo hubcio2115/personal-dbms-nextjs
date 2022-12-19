@@ -2,9 +2,6 @@ import NextAuth, { type NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { verify } from 'argon2';
 
-// Prisma adapter for NextAuth, optional and can be removed
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-
 import { prisma } from '../../../server/db/client';
 import { loginSchema } from '../../../server/common/auth';
 
@@ -16,20 +13,8 @@ export const authOptions: NextAuthOptions = {
 
       return session;
     },
-    jwt: async ({ token, user }) => {
-      if (!!user) token.id = user.id;
-
-      return token;
-    },
-  },
-  jwt: {
-    maxAge: 1 * 24 * 30 * 60,
-  },
-  pages: {
-    signIn: '/admin',
   },
   // Configure one or more authentication providers
-  adapter: PrismaAdapter(prisma),
   providers: [
     Credentials({
       name: 'credentials',
@@ -46,7 +31,7 @@ export const authOptions: NextAuthOptions = {
         },
       },
       authorize: async (credentials) => {
-        const creds = await loginSchema.parse(credentials);
+        const creds = await loginSchema.parseAsync(credentials);
 
         const user = await prisma.user.findFirst({
           where: { username: creds.username },
