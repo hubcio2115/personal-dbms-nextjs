@@ -11,7 +11,6 @@ const Admin: NextPage = () => {
   const {
     handleSubmit,
     register,
-    reset,
     formState: { errors },
   } = useForm<Login>({
     defaultValues: {
@@ -21,18 +20,13 @@ const Admin: NextPage = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = useCallback(
-    async (data: Login) => {
-      try {
-        const res = await signIn('credentials', { ...data, callbackUrl: '/' });
-        console.log(res);
-        reset();
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    [reset],
-  );
+  const onSubmit = useCallback(async (data: Login) => {
+    try {
+      await signIn('credentials', { ...data, callbackUrl: '/' });
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
 
   return (
     <>
