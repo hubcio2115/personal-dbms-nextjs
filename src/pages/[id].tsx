@@ -56,9 +56,12 @@ const User = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <MainLayout className="mt-2 flex-col items-center justify-center md:mt-0">
       <div className="flex flex-auto flex-col justify-center gap-6 md:w-1/2 xl:w-1/3">
-        <Link href="/">
-          <button className="btn self-start">&#8592; back</button>
-        </Link>
+        <div>
+          <Link href="/">
+            <button className="btn self-start">&#8592; back</button>
+          </Link>
+        </div>
+
         <div className="card w-full bg-primary xl:mb-24">
           <div className="card-body">
             {!!data
