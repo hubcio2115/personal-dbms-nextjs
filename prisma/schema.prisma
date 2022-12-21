@@ -15,17 +15,16 @@ datasource db {
 }
 
 model PersonalData {
-  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   firstName  String
   lastName   String
   maidenName String
   age        Int
-  gender     String
+  sex        String
   email      String
   phone      String
   username   String
-  password   String
-  birthDate  String
+  birthDate  DateTime
   bloodGroup String
   height     Int
   weight     Int
