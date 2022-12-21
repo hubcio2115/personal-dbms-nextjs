@@ -3,7 +3,7 @@ import Credentials from 'next-auth/providers/credentials';
 import { verify } from 'argon2';
 
 import { prisma } from '../../../server/db/client';
-import { loginSchema } from '../../../server/common/auth';
+import { loginSchema } from '../../../common/validation/auth';
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
