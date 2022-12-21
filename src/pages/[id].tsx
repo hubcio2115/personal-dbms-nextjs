@@ -76,7 +76,11 @@ const User = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
                         className="text- card-title text-primary-content"
                         key={index}
                       >
-                        {`${label}: `} {data[key as keyof PersonalData]}
+                        {`${label}: ${
+                          key === 'birthDate'
+                            ? data.birthDate.toISOString().split('T')[0]
+                            : data[key as keyof PersonalData]
+                        }`}
                       </p>,
                     ];
                   },
