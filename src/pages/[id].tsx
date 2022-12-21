@@ -11,7 +11,7 @@ import { trpc } from '../utils/trpc';
 import { prisma } from '../server/db/client';
 import MainLayout from '../components/MainLayout';
 import { type PersonalData } from '@prisma/client';
-import { splitLowerCamelCase } from '../utils/[id]';
+import { splitCamelCaseAndCapitalize } from '../utils/[id]';
 import Link from 'next/link';
 
 export const getStaticProps = async (
@@ -69,7 +69,7 @@ const User = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
                   (acc: JSX.Element[], key: string, index) => {
                     if (key === 'id') return acc;
 
-                    const label = splitLowerCamelCase(key);
+                    const label = splitCamelCaseAndCapitalize(key);
                     return [
                       ...acc,
                       <p
