@@ -5,12 +5,9 @@ import { clsx } from 'clsx';
 import PersonalDataCard from '../components/PersonalDataCard';
 import { trpc } from '../utils/trpc';
 import MainLayout from '../components/MainLayout';
-import { useSession } from 'next-auth/react';
 
 const Home: NextPage = () => {
   const { data } = trpc.personalData.getAll.useQuery();
-  const { data: sessionData } = useSession();
-  console.log(sessionData);
 
   return (
     <>
