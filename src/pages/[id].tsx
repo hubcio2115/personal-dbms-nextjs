@@ -12,7 +12,7 @@ import { prisma } from '../server/db/client';
 import MainLayout from '../components/MainLayout';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { v5 as uuidv5 } from 'uuid';
 import DetailsField from '../components/DetailsField';
 import { type SubmitHandler, useForm } from 'react-hook-form';
@@ -21,27 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { type PersonalDataWithoutId } from '../common/validation/personalData';
 import clsx from 'clsx';
 import { useQueryClient } from '@tanstack/react-query';
-
-export const getStaticProps = async (
-  context: GetStaticPropsContext<{ id: string }>,
-) => {
-  const ssg = createProxySSGHelpers({
-    router: appRouter,
-    ctx: await createContextInner({ session: null }),
-    transformer: superjson,
-  });
-  const id = context.params?.id as string;
-
-  await ssg.personalData.byId.prefetch(id);
-
-  return {
-    props: {
-      trpcState: ssg.dehydrate(),
-      id,
-    },
-    revalidate: 1,
-  };
-};
+import { useRouter } from 'next/router';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const personalData = await prisma.personalData.findMany({
@@ -54,52 +34,105 @@ export const getStaticPaths: GetStaticPaths = async () => {
         id: data.id,
       },
     })),
-    fallback: 'blocking',
+    fallback: false,
   };
+};
+
+export const getStaticProps = async ({
+  params,
+}: GetStaticPropsContext<{ id: string }>) => {
+  const ssg = createProxySSGHelpers({
+    router: appRouter,
+    ctx: await createContextInner({ session: null }),
+    transformer: superjson,
+  });
+
+  if (!!params?.id) {
+    await ssg.personalData.byId.prefetch(params.id);
+    console.log(params.id);
+
+    return {
+      props: {
+        trpcState: ssg.dehydrate(),
+        id: params.id,
+      },
+      revalidate: 1,
+    };
+  }
 };
 
 const User = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [isEditing, setIsEditing] = useState(false);
+  const router = useRouter();
   const queryClient = useQueryClient();
 
+  const getByIdQueryKey = useMemo(
+    () => [['personalData', 'byId'], { input: id, type: 'query' }],
+    [id],
+  );
+
   const { data } = trpc.personalData.byId.useQuery(id);
-  const { mutate: updateData } = trpc.personalData.update.useMutation();
+
+  const { mutate: updateData, isLoading: updateLoading } =
+    trpc.personalData.update.useMutation({
+      onMutate: (mutationData) => {
+        queryClient.setQueryData(getByIdQueryKey, mutationData);
+      },
+      onError: () => {
+        queryClient.setQueryData(getByIdQueryKey, data);
+      },
+      onSuccess: () => {
+        toggleIsEditing();
+      },
+    });
+
+  const { mutate: deleteData, isLoading: deleteLoading } =
+    trpc.personalData.delete.useMutation({
+      onSettled: () => {
+        router.push('/');
+      },
+    });
+
+  const deleteValue = () => {
+    deleteData(id);
+  };
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<PersonalDataWithoutId>({
     resolver: zodResolver(personalDataSchemaWithoutId),
     mode: 'onTouched',
     defaultValues: !!data
       ? ({
-          ...personalDataSchemaWithoutId.parse(data),
+          ...data,
           birthDate: data.birthDate.toISOString().substring(0, 10),
         } as unknown as PersonalDataWithoutId)
       : undefined,
   });
 
   const toggleIsEditing = () => {
+    if (!!data) {
+      const { id: _dataId, ...newDefaultValues } = data;
+
+      reset(
+        {
+          ...newDefaultValues,
+          birthDate: newDefaultValues.birthDate.toISOString().substring(0, 10),
+        } as unknown as PersonalDataWithoutId,
+        { keepDefaultValues: false },
+      );
+    }
+
     setIsEditing((prev) => !prev);
   };
 
   const isAdmin = useSession().status === 'authenticated';
 
   const onSubmit: SubmitHandler<PersonalDataWithoutId> = (data) => {
-    updateData(
-      { id, ...data },
-      {
-        onSuccess(data) {
-          queryClient.setQueryData(
-            [['personalData', 'byId'], { input: id, type: 'query' }],
-            data,
-          );
-        },
-      },
-    );
-
-    toggleIsEditing();
+    updateData({ id, ...data });
   };
 
   return (
@@ -122,7 +155,15 @@ const User = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
               >
                 Edit
               </button>
-              <button className="btn-error btn" type="button">
+              <button
+                className={clsx(
+                  'btn-error btn',
+                  deleteLoading ? 'loading' : '',
+                )}
+                disabled={deleteLoading}
+                onClick={deleteValue}
+                type="button"
+              >
                 Delete
               </button>
             </div>
@@ -156,7 +197,13 @@ const User = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
               : null}
             {isEditing ? (
               <div className="card-actions justify-end">
-                <button className="btn-success btn" type="submit">
+                <button
+                  className={clsx(
+                    'btn-success btn',
+                    updateLoading ? 'loading' : '',
+                  )}
+                  type="submit"
+                >
                   Submit
                 </button>
               </div>
