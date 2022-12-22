@@ -1,4 +1,4 @@
-import { router, publicProcedure } from '../trpc';
+import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { z } from 'zod';
 import {
   personalDataSchema,
@@ -16,13 +16,13 @@ export const personalDataRouter = router({
       ctx.prisma.personalData.findFirst({ where: { id } }),
     ),
 
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(z.string())
     .mutation(({ ctx, input: id }) =>
       ctx.prisma.personalData.delete({ where: { id } }),
     ),
 
-  update: publicProcedure
+  update: protectedProcedure
     .input(personalDataSchema)
     .mutation(({ ctx, input: data }) => {
       const { id, ...inputData } = data;
@@ -32,7 +32,7 @@ export const personalDataRouter = router({
       });
     }),
 
-  create: publicProcedure
+  create: protectedProcedure
     .input(personalDataSchemaWithoutId)
     .mutation(({ ctx, input: data }) =>
       ctx.prisma.personalData.create({ data }),
