@@ -18,3 +18,9 @@ export const personalDataSchema = z.object({
   weight: z.number().min(0),
   eyeColor: z.string().min(1),
 });
+export type PersonalDataSchema = z.infer<typeof personalDataSchema>;
+
+export const personalDataSchemaWithoutId = personalDataSchema.omit({
+  id: true,
+});
+export type PersonalDataWithoutId = z.infer<typeof personalDataSchemaWithoutId>;
