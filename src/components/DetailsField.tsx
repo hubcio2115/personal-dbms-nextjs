@@ -38,14 +38,31 @@ const DetailsField = ({
       <label className="label text-primary-content">
         <span className="label-text">{label}:</span>
       </label>
-      <input
-        type={inputType}
-        {...register(fieldKey, { valueAsDate: fieldKey === 'birthDate' })}
-        className={clsx(
-          'input input-md flex-auto',
-          !!error ? 'input-bordered input-error' : '',
-        )}
-      />
+      {fieldKey === 'sex' ? (
+        <select {...register(fieldKey)} defaultValue="-" className="select">
+          <option value="male">male</option>
+          <option value="female">female</option>
+        </select>
+      ) : (
+        <input
+          type={inputType}
+          {...register(fieldKey, {
+            valueAsDate: fieldKey === 'birthDate',
+            valueAsNumber: !!['age', 'height', 'weight'].find(
+              (el) => fieldKey === el,
+            ),
+          })}
+          max={
+            fieldKey === 'birthDate'
+              ? new Date().toISOString().substring(0, 10)
+              : undefined
+          }
+          className={clsx(
+            'input input-md flex-auto',
+            !!error ? 'input-bordered input-error' : '',
+          )}
+        />
+      )}
       <label className="label">
         {!!error ? (
           <span className="label-text-alt">{error.message}</span>
