@@ -11,7 +11,7 @@ const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
   children,
 }) => {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col pb-4">
       <nav>
         <NavBar />
       </nav>
