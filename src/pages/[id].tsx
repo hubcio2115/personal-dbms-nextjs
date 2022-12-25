@@ -203,6 +203,7 @@ const User = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
                     updateLoading ? 'loading' : '',
                   )}
                   type="submit"
+                  disabled={updateLoading}
                 >
                   Submit
                 </button>
