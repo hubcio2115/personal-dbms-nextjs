@@ -1,9 +1,6 @@
 import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { z } from 'zod';
-import {
-  personalDataSchema,
-  personalDataSchemaWithoutId,
-} from '../../../common/validation/personalData';
+import { personalDataSchema } from '../../../common/validation/personalData';
 
 export const personalDataRouter = router({
   getAll: publicProcedure.query(({ ctx }) =>
@@ -32,9 +29,9 @@ export const personalDataRouter = router({
       });
     }),
 
-  create: protectedProcedure
-    .input(personalDataSchemaWithoutId)
-    .mutation(({ ctx, input: data }) =>
-      ctx.prisma.personalData.create({ data }),
-    ),
+  // create: protectedProcedure
+  //   .input(personalDataSchemaWithoutId)
+  //   .mutation(({ ctx, input: data }) =>
+  //     ctx.prisma.personalData.create({ data }),
+  //   ),
 });

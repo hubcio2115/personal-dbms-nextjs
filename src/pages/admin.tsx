@@ -14,7 +14,7 @@ const Admin: NextPage = () => {
     formState: { errors },
   } = useForm<Login>({
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
     },
     resolver: zodResolver(loginSchema),
@@ -48,10 +48,10 @@ const Admin: NextPage = () => {
                   type="text"
                   placeholder="Type your username..."
                   className="input-bordered input w-full max-w-xs"
-                  {...register('username')}
+                  {...register('email')}
                 />
 
-                {!!errors.username ? <p>{errors.username.message}</p> : null}
+                {!!errors.email ? <p>{errors.email.message}</p> : null}
               </div>
 
               <div>

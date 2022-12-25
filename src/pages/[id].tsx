@@ -16,7 +16,10 @@ import { useMemo, useState } from 'react';
 import { v5 as uuidv5 } from 'uuid';
 import DetailsField from '../components/DetailsField';
 import { type SubmitHandler, useForm } from 'react-hook-form';
-import { personalDataSchemaWithoutId } from '../common/validation/personalData';
+import {
+  personalDataSchema,
+  personalDataSchemaWithoutId,
+} from '../common/validation/personalData';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type PersonalDataWithoutId } from '../common/validation/personalData';
 import clsx from 'clsx';
@@ -105,23 +108,18 @@ const User = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
   } = useForm<PersonalDataWithoutId>({
     resolver: zodResolver(personalDataSchemaWithoutId),
     mode: 'onTouched',
-    defaultValues: !!data
-      ? ({
-          ...data,
-          birthDate: data.birthDate.toISOString().substring(0, 10),
-        } as unknown as PersonalDataWithoutId)
-      : undefined,
+    defaultValues: personalDataSchemaWithoutId.parse(data) ?? undefined,
   });
 
   const toggleIsEditing = () => {
     if (!!data) {
-      const { id: _dataId, ...newDefaultValues } = data;
+      const { id: _dataId, ...newDefaultValues } =
+        personalDataSchema.parse(data);
 
       reset(
         {
           ...newDefaultValues,
-          birthDate: newDefaultValues.birthDate.toISOString().substring(0, 10),
-        } as unknown as PersonalDataWithoutId,
+        },
         { keepDefaultValues: false },
       );
     }

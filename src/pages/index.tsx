@@ -5,9 +5,11 @@ import { clsx } from 'clsx';
 import PersonalDataCard from '../components/PersonalDataCard';
 import { trpc } from '../utils/trpc';
 import MainLayout from '../components/MainLayout';
+import { useSession } from 'next-auth/react';
 
 const Home: NextPage = () => {
   const { data } = trpc.personalData.getAll.useQuery();
+  const user = useSession().data?.user;
 
   return (
     <>
@@ -27,7 +29,11 @@ const Home: NextPage = () => {
           )}
         >
           {data?.map((personalData) => (
-            <PersonalDataCard key={personalData.id} {...personalData} />
+            <PersonalDataCard
+              key={personalData.id}
+              {...personalData}
+              email={user?.email}
+            />
           )) ?? <progress className="progress progress-primary w-56" />}
         </div>
       </MainLayout>

@@ -2,7 +2,9 @@ import { type PersonalData } from '@prisma/client';
 import Link from 'next/link';
 import { type FC } from 'react';
 
-type PersonalDataProps = PersonalData;
+interface PersonalDataProps extends PersonalData {
+  email?: string;
+}
 
 const PersonalDataCard: FC<PersonalDataProps> = ({
   id,
@@ -15,7 +17,7 @@ const PersonalDataCard: FC<PersonalDataProps> = ({
       <div className="card-body">
         <h2 className="card-title">{`${firstName} ${lastName}`}</h2>
 
-        <p>{email}</p>
+        <p>{email ?? 'mail'}</p>
       </div>
     </Link>
   </div>

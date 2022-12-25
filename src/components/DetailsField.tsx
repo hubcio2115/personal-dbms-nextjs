@@ -1,4 +1,3 @@
-import { type PersonalData } from '@prisma/client';
 import clsx from 'clsx';
 import { type HTMLInputTypeAttribute, useMemo } from 'react';
 import type { FieldError, UseFormRegister } from 'react-hook-form';
@@ -6,8 +5,8 @@ import { type PersonalDataWithoutId } from '../common/validation/personalData';
 import { splitCamelCaseAndCapitalize } from '../utils/[id]';
 
 type DetailsFieldProps = {
-  fieldKey: keyof Omit<PersonalData, 'id'>;
-  fieldValue: PersonalData[DetailsFieldProps['fieldKey']];
+  fieldKey: keyof Omit<PersonalDataWithoutId, 'userId'>;
+  fieldValue: PersonalDataWithoutId[DetailsFieldProps['fieldKey']];
   isEditing: boolean;
   register: UseFormRegister<PersonalDataWithoutId>;
   error?: FieldError;
@@ -22,10 +21,6 @@ const DetailsField = ({
 }: DetailsFieldProps) => {
   const label = splitCamelCaseAndCapitalize(fieldKey);
   const inputType = useMemo((): HTMLInputTypeAttribute => {
-    if (fieldKey === 'birthDate') return 'date';
-
-    if (fieldKey === 'email') return 'email';
-
     if (fieldKey === 'phone') return 'tel';
 
     if (fieldKey in ['age', 'height', 'weight']) return 'number';
@@ -47,16 +42,10 @@ const DetailsField = ({
         <input
           type={inputType}
           {...register(fieldKey, {
-            valueAsDate: fieldKey === 'birthDate',
             valueAsNumber: !!['age', 'height', 'weight'].find(
               (el) => fieldKey === el,
             ),
           })}
-          max={
-            fieldKey === 'birthDate'
-              ? new Date().toISOString().substring(0, 10)
-              : undefined
-          }
           className={clsx(
             'input input-md flex-auto',
             !!error ? 'input-bordered input-error' : '',
@@ -71,11 +60,7 @@ const DetailsField = ({
     </div>
   ) : (
     <p className="card-title text-primary-content">
-      {`${label}: ${
-        fieldValue instanceof Date
-          ? fieldValue.toLocaleString().substring(0, 10)
-          : fieldValue
-      }`}
+      {`${label}: ${fieldValue}`}
     </p>
   );
 };

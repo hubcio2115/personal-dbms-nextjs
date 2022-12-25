@@ -1,28 +1,30 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import { verify } from 'argon2';
 
 import { prisma } from '../../../server/db/client';
 import { loginSchema } from '../../../common/validation/auth';
+import { verify } from 'argon2';
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
-    session({ session, token }) {
-      if (!!token) {
-        session.user.userId = token.userId;
-        session.user.username = token.username;
-      }
-
-      return session;
-    },
     jwt: async ({ token, user }) => {
       if (!!user) {
         token.userId = user.id;
-        token.username = user.username;
+        token.email = user.email;
+        token.role = user.role;
       }
 
       return token;
+    },
+    session({ session, token }) {
+      if (!!token) {
+        session.user.userId = token.userId;
+        session.user.email = token.email;
+        session.user.role = token.role;
+      }
+
+      return session;
     },
   },
   jwt: {
@@ -36,10 +38,10 @@ export const authOptions: NextAuthOptions = {
     Credentials({
       name: 'credentials',
       credentials: {
-        username: {
-          label: 'username',
-          type: 'text',
-          placeholder: 'username',
+        email: {
+          label: 'email',
+          type: 'email',
+          placeholder: 'email',
         },
         password: {
           label: 'Password',
@@ -51,7 +53,7 @@ export const authOptions: NextAuthOptions = {
         const creds = await loginSchema.parseAsync(credentials);
 
         const user = await prisma.user.findFirst({
-          where: { username: creds.username },
+          where: { email: creds.email },
         });
 
         if (!user) return null;
@@ -62,7 +64,8 @@ export const authOptions: NextAuthOptions = {
 
         return {
           id: user.id,
-          username: user.username,
+          email: user.email,
+          role: user.role,
         };
       },
     }),
