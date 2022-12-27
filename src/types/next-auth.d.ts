@@ -1,4 +1,4 @@
-import type { DefaultUser, DefaultSession } from 'next-auth';
+import type { DefaultUser } from 'next-auth';
 
 type Role = 'ADMIN' | 'USER';
 
@@ -11,10 +11,10 @@ declare module 'next-auth' {
       userId: string;
       email: string;
       role: Role;
-    } & DefaultSession['user'];
+    };
   }
 
-  interface User extends DefaultUser {
+  interface User extends Omit<DefaultUser, 'name' | 'image'> {
     role: Role;
     email: string;
   }
