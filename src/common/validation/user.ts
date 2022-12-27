@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { personalDataSchema } from './personalData';
 
 export const userSchema = z.object({
   id: z.string(),
@@ -14,7 +15,7 @@ export const userSchema = z.object({
       'Password has to have one small character, uppercase character, number, special character!',
     ),
   role: z.enum(['ADMIN', 'USER']),
-  personalData: z.object({}),
+  personalData: personalDataSchema.optional(),
 });
 export type User = z.infer<typeof userSchema>;
 

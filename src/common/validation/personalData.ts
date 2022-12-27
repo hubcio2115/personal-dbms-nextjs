@@ -11,6 +11,8 @@ export const personalDataSchema = z.object({
   age: z.number().min(0, negativeErrorMessage),
   sex: z.enum(['female', 'male']),
   phone: z.string().min(1, requiredErrorMessage),
+  isPrivate: z.boolean(),
+  userId: z.string().optional(),
 });
 export type PersonalDataSchema = z.infer<typeof personalDataSchema>;
 
