@@ -1,8 +1,6 @@
 import type {
-  GetServerSideProps,
-  GetStaticPaths,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
   NextPage,
 } from 'next';
 import { createProxySSGHelpers } from '@trpc/react-query/ssg';
@@ -10,7 +8,6 @@ import { appRouter } from '../server/trpc/router/_app';
 import superjson from 'superjson';
 import { createContextInner } from '../server/trpc/context';
 import { trpc } from '../utils/trpc';
-import { prisma } from '../server/db/client';
 import MainLayout from '../components/MainLayout';
 import Link from 'next/link';
 import { getSession, useSession } from 'next-auth/react';
@@ -27,69 +24,45 @@ import { type PersonalDataWithoutId } from '../common/validation/personalData';
 import clsx from 'clsx';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
+import type { PersonalData } from '@prisma/client';
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-
-  return !session
-    ? {
-        redirect: {
-          destination: '/',
-          permanent: false,
-        },
-      }
-    : {
-        props: {
-          session,
-          query: context.query,
-        },
-      };
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const personalData = await prisma.personalData.findMany({
-    select: { id: true },
-  });
-
-  return {
-    paths: personalData?.map((data) => ({
-      params: {
-        id: data.id,
-      },
-    })),
-    fallback: false,
-  };
-};
-
-export const getStaticProps = async ({
-  params,
-}: GetStaticPropsContext<{ id: string }>) => {
+export const getServerSideProps = async (
+  ctx: GetServerSidePropsContext<{ id: string }>,
+) => {
+  const session = await getSession(ctx);
   const ssg = createProxySSGHelpers({
     router: appRouter,
-    ctx: await createContextInner({ session: null }),
+    ctx: await createContextInner({ session }),
     transformer: superjson,
   });
 
-  if (!!params?.id) {
-    await ssg.personalData.byId.prefetch({ id: params.id });
-    console.log(params.id);
+  if (!!ctx.params?.id && !!session) {
+    await ssg.personalData.byId.prefetch({ id: ctx.params.id });
 
     return {
       props: {
         trpcState: ssg.dehydrate(),
-        id: params.id,
+        id: ctx.params.id,
+        session: await getSession(),
       },
-      revalidate: 1,
     };
   }
+
+  return {
+    redirect: {
+      destination: '/',
+      permanent: false,
+    },
+  };
 };
 
-const User: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
-  id,
-}) => {
+const User: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ id }) => {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
+  const isLoggedIn = useSession().status === 'authenticated';
 
   const getByIdQueryKey = useMemo(
     () => [['personalData', 'byId'], { input: id, type: 'query' }],
@@ -130,7 +103,7 @@ const User: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   } = useForm<PersonalDataWithoutId>({
     resolver: zodResolver(personalDataSchemaWithoutId),
     mode: 'onTouched',
-    defaultValues: personalDataSchemaWithoutId.parse(data) ?? undefined,
+    defaultValues: !!data ? personalDataSchemaWithoutId.parse(data) : undefined,
   });
 
   const toggleIsEditing = () => {
@@ -149,8 +122,6 @@ const User: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     setIsEditing((prev) => !prev);
   };
 
-  const isAdmin = useSession().status === 'authenticated';
-
   const onSubmit: SubmitHandler<PersonalDataWithoutId> = (data) => {
     updateData({ id, ...data });
   };
@@ -166,7 +137,7 @@ const User: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             <button className="btn self-start">&#8592; back</button>
           </Link>
 
-          {isAdmin ? (
+          {isLoggedIn ? (
             <div className="flex gap-3 justify-self-end">
               <button
                 className="btn-success btn"
@@ -194,9 +165,10 @@ const User: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <div className={clsx(isEditing ? '' : 'gap-3', 'card-body')}>
             {!!data
               ? Object.keys(data).reduce((acc: JSX.Element[], key: string) => {
-                  if (key === 'id') return acc;
+                  const dataKey = key as keyof PersonalData;
 
-                  const dataKey = key as keyof PersonalDataWithoutId;
+                  if (dataKey === 'id' || dataKey === 'userId') return acc;
+
                   const keyOfElement = uuidv5(
                     dataKey,
                     'bc4912ed-67a8-4e39-bb85-a26bb60f20fa',
