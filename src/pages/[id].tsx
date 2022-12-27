@@ -1,4 +1,5 @@
 import type {
+  GetServerSideProps,
   GetStaticPaths,
   GetStaticPropsContext,
   InferGetStaticPropsType,
@@ -11,7 +12,7 @@ import { trpc } from '../utils/trpc';
 import { prisma } from '../server/db/client';
 import MainLayout from '../components/MainLayout';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import { useMemo, useState } from 'react';
 import { v5 as uuidv5 } from 'uuid';
 import DetailsField from '../components/DetailsField';
@@ -25,6 +26,24 @@ import { type PersonalDataWithoutId } from '../common/validation/personalData';
 import clsx from 'clsx';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+
+  return !session
+    ? {
+        redirect: {
+          destination: '/',
+          permanent: false,
+        },
+      }
+    : {
+        props: {
+          session,
+          query: context.query,
+        },
+      };
+};
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const personalData = await prisma.personalData.findMany({
