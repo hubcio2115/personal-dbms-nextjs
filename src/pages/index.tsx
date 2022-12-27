@@ -1,41 +1,96 @@
-import { type NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
+import { useForm } from 'react-hook-form';
+import { type Login, loginSchema } from '../common/validation/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { getSession, signIn } from 'next-auth/react';
+import { useCallback } from 'react';
 import Head from 'next/head';
-import { clsx } from 'clsx';
-
-import PersonalDataCard from '../components/PersonalDataCard';
-import { trpc } from '../utils/trpc';
 import MainLayout from '../components/MainLayout';
-import { useSession } from 'next-auth/react';
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getSession(ctx);
+
+  return !!session
+    ? {
+        redirect: {
+          destination: '/dashboard',
+          permanent: false,
+        },
+      }
+    : {
+        props: {
+          session,
+          query: ctx.query,
+        },
+      };
+};
 
 const Home: NextPage = () => {
-  const { data } = trpc.personalData.getAll.useQuery();
-  const user = useSession().data?.user;
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<Login>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = useCallback((data: Login) => {
+    try {
+      signIn('credentials', { ...data, callbackUrl: '/dashboard' });
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
 
   return (
     <>
       <Head>
-        <title>Personal Data DBMS</title>
-        <meta name="description" content="Project I've made" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>Login Page</title>
       </Head>
 
       <MainLayout>
-        <div
-          className={clsx(
-            !!data
-              ? 'gird-cols-1 grid gap-4 py-8  md:grid-cols-2 md:py-16 lg:grid-cols-3 xl:grid-cols-4'
-              : 'flex items-center justify-center',
-            'flex-auto',
-          )}
+        <form
+          className="flex w-full flex-auto items-center justify-center"
+          onSubmit={handleSubmit(onSubmit)}
         >
-          {data?.map((personalData) => (
-            <PersonalDataCard
-              key={personalData.id}
-              {...personalData}
-              email={user?.email}
-            />
-          )) ?? <progress className="progress progress-primary w-56" />}
-        </div>
+          <div className="card w-96 bg-base-100 shadow-xl">
+            <div className="card-body">
+              <h2 className="card-title">Login Page</h2>
+
+              <div>
+                <input
+                  type="text"
+                  placeholder="Type your username..."
+                  className="input-bordered input w-full max-w-xs"
+                  {...register('email')}
+                />
+
+                {!!errors.email ? <p>{errors.email.message}</p> : null}
+              </div>
+
+              <div>
+                <input
+                  type="password"
+                  placeholder="Type your password..."
+                  className="input-bordered input my-2 w-full max-w-xs"
+                  {...register('password')}
+                />
+
+                {!!errors.password ? <p>{errors.password.message}</p> : null}
+              </div>
+
+              <div className="card-actions items-center justify-between">
+                <button className="btn-secondary btn" type="submit">
+                  Login
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
       </MainLayout>
     </>
   );
