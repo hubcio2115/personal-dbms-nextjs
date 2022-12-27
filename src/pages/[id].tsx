@@ -3,6 +3,7 @@ import type {
   GetStaticPaths,
   GetStaticPropsContext,
   InferGetStaticPropsType,
+  NextPage,
 } from 'next';
 import { createProxySSGHelpers } from '@trpc/react-query/ssg';
 import { appRouter } from '../server/trpc/router/_app';
@@ -70,7 +71,7 @@ export const getStaticProps = async ({
   });
 
   if (!!params?.id) {
-    await ssg.personalData.byId.prefetch(params.id);
+    await ssg.personalData.byId.prefetch({ id: params.id });
     console.log(params.id);
 
     return {
@@ -83,7 +84,9 @@ export const getStaticProps = async ({
   }
 };
 
-const User = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const User: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
+  id,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -93,7 +96,7 @@ const User = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
     [id],
   );
 
-  const { data } = trpc.personalData.byId.useQuery(id);
+  const { data } = trpc.personalData.byId.useQuery({ id });
 
   const { mutate: updateData, isLoading: updateLoading } =
     trpc.personalData.update.useMutation({
@@ -116,7 +119,7 @@ const User = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => {
     });
 
   const deleteValue = () => {
-    deleteData(id);
+    deleteData({ id });
   };
 
   const {
