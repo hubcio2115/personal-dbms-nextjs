@@ -14,13 +14,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Sex {
+  female
+  male
+}
+
 model PersonalData {
   id         String  @id @default(auto()) @map("_id") @db.ObjectId
   firstName  String
   lastName   String
   maidenName String
   age        Int
-  sex        String
+  sex        Sex
   phone      String
   isPrivate  Boolean
   user       User    @relation(fields: [userId], references: [id])
