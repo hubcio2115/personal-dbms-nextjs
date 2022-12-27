@@ -30,9 +30,6 @@ export const authOptions: NextAuthOptions = {
   jwt: {
     maxAge: 1 * 24 * 30 * 60,
   },
-  pages: {
-    signIn: '/admin',
-  },
   // Configure one or more authentication providers
   providers: [
     Credentials({
