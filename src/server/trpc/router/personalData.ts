@@ -69,13 +69,16 @@ export const personalDataRouter = router({
         if (
           ctx.session.user.role === 'ADMIN' ||
           data.userId === ctx.session.user.userId
-        )
+        ) {
+          const { id: personalId, ...newData } = data;
+
           return ctx.prisma.personalData.update({
             where: {
               id: input.id,
             },
-            data: input,
+            data: newData,
           });
+        }
 
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
