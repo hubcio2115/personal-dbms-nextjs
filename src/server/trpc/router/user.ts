@@ -12,6 +12,7 @@ export const userRouter = router({
     .input(userSchemaWithoutId.omit({ role: true }))
     .mutation(async ({ ctx, input: { password, email } }) => {
       const passwd = await hash(password);
+
       return ctx.prisma.user.create({
         data: { role: 'USER', email, password: passwd },
       });
@@ -21,8 +22,8 @@ export const userRouter = router({
     .input(userSchema)
     .query(({ ctx, input: newUser }) => {
       if (
-        ctx.session?.user.userId === newUser.id ||
-        ctx.session.user.role === 'ADMIN'
+        ctx.session.user.role === 'ADMIN' ||
+        ctx.session.user.userId === newUser.id
       ) {
         const { id, ...user } = newUser;
         return ctx.prisma.user.update({ where: { id }, data: user });
@@ -32,8 +33,24 @@ export const userRouter = router({
     }),
 
   deleteUser: protectedProcedure
-    .input(z.string())
-    .query(({ ctx, input: userId }) =>
-      ctx.prisma.user.delete({ where: { id: userId } }),
-    ),
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findFirst({
+        where: { id: input.id },
+      });
+
+      if (!!user) {
+        if (
+          ctx.session.user.role === 'ADMIN' ||
+          user.id === ctx.session.user.userId
+        )
+          return ctx.prisma.user.delete({
+            where: { id: input.id },
+          });
+
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
+      }
+
+      return null;
+    }),
 });
