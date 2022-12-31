@@ -60,23 +60,19 @@ export const personalDataRouter = router({
 
   update: protectedProcedure
     .input(personalDataSchema)
-    .mutation(async ({ ctx, input }) => {
-      const data = await ctx.prisma.personalData.findFirst({
-        where: { id: input.id },
+    .mutation(async ({ ctx, input: { id, ...data } }) => {
+      const serverVersion = await ctx.prisma.personalData.findFirst({
+        where: { id },
       });
 
-      if (!!data) {
+      if (!!serverVersion) {
         if (
           ctx.session.user.role === 'ADMIN' ||
-          data.userId === ctx.session.user.userId
+          serverVersion.userId === ctx.session.user.userId
         ) {
-          const { id: personalId, ...newData } = data;
-
           return ctx.prisma.personalData.update({
-            where: {
-              id: input.id,
-            },
-            data: newData,
+            where: { id },
+            data,
           });
         }
 
