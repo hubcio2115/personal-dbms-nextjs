@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getSession, signIn } from 'next-auth/react';
 import { useCallback } from 'react';
 import Head from 'next/head';
-import MainLayout from '../components/MainLayout';
+import MainLayout from '../layouts/MainLayout';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);

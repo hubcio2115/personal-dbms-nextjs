@@ -8,7 +8,7 @@ import { appRouter } from '../server/trpc/router/_app';
 import superjson from 'superjson';
 import { createContextInner } from '../server/trpc/context';
 import { trpc } from '../utils/trpc';
-import MainLayout from '../components/MainLayout';
+import MainLayout from '../layouts/MainLayout';
 import Link from 'next/link';
 import { getSession, useSession } from 'next-auth/react';
 import { useMemo, useState } from 'react';

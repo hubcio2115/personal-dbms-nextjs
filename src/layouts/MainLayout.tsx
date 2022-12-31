@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import type { FC, PropsWithChildren } from 'react';
-import NavBar from './NavBar';
+import NavBar from '../components/NavBar';
 
 interface MainLayoutProps {
   className?: string;

@@ -4,7 +4,7 @@ import { clsx } from 'clsx';
 
 import PersonalDataCard from '../components/PersonalDataCard';
 import { trpc } from '../utils/trpc';
-import MainLayout from '../components/MainLayout';
+import MainLayout from '../layouts/MainLayout';
 import { getSession, useSession } from 'next-auth/react';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
