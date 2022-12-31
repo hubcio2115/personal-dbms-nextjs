@@ -65,7 +65,7 @@ const User: NextPage<
   const isLoggedIn = useSession().status === 'authenticated';
 
   const getByIdQueryKey = useMemo(
-    () => [['personalData', 'byId'], { input: id, type: 'query' }],
+    () => [['personalData', 'byId'], { input: { id }, type: 'query' }],
     [id],
   );
 
