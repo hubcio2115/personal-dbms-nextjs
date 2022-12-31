@@ -23,10 +23,12 @@ export const userSchemaWithoutId = userSchema.omit({ id: true });
 export type UserWithoutId = z.infer<typeof userSchemaWithoutId>;
 
 export const registerUserSchema = userSchemaWithoutId
+  .omit({ personalData: true, role: true })
   .extend({
-    confirmPassword: z.string(),
+    confirmPassword: z.string().min(1, 'This field is required!'),
   })
-  .refine(
-    (data) => data.password === data.confirmPassword,
-    'Passwords are not the same!',
-  );
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
+    message: 'Passwords are not the same!',
+  });
+export type RegisterUser = z.infer<typeof registerUserSchema>;
