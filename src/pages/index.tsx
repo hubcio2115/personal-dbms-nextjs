@@ -16,9 +16,7 @@ const Home: NextPage = () => (
       <title>Login Page</title>
     </Head>
 
-    <MainLayout>
-      <LoginForm />
-    </MainLayout>
+    <LoginForm />
   </MainLayout>
 );
 
