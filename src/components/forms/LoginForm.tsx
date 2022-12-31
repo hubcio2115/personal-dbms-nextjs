@@ -17,6 +17,7 @@ const LoginForm: FC = () => {
       password: '',
     },
     resolver: zodResolver(loginSchema),
+    mode: 'onTouched',
   });
 
   const onSubmit = useCallback((data: Login) => {
@@ -58,9 +59,12 @@ const LoginForm: FC = () => {
           </div>
 
           <div className="form-control">
+            <label className="label text-primary-content">
+              <span className="label-text">Password:</span>
+            </label>
+
             <input
               type="password"
-              placeholder="Type your password..."
               className={clsx(
                 'input',
                 !!errors.password ? 'input-bordered input-error' : '',
