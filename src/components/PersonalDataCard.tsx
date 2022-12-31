@@ -11,7 +11,7 @@ const PersonalDataCard: FC<PersonalDataProps> = ({
   firstName,
   lastName,
   email,
-}: PersonalDataProps) => (
+}) => (
   <div className="card w-80 justify-self-center bg-primary-content text-primary shadow-xl hover:cursor-pointer">
     <Link href={id}>
       <div className="card-body">

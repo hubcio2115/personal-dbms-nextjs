@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { type HTMLInputTypeAttribute, useMemo } from 'react';
+import { type HTMLInputTypeAttribute, useMemo, type FC } from 'react';
 import type { FieldError, UseFormRegister } from 'react-hook-form';
 import { type PersonalDataWithoutId } from '../common/validation/personalData';
 import { splitCamelCaseAndCapitalize } from '../utils/[id]';
@@ -12,13 +12,13 @@ type DetailsFieldProps = {
   error?: FieldError;
 };
 
-const DetailsField = ({
+const DetailsField: FC<DetailsFieldProps> = ({
   fieldKey,
   fieldValue,
   isEditing,
   error,
   register,
-}: DetailsFieldProps) => {
+}) => {
   const label = splitCamelCaseAndCapitalize(fieldKey);
   const inputType = useMemo((): HTMLInputTypeAttribute => {
     if (fieldKey === 'phone') return 'tel';
