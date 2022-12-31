@@ -6,23 +6,12 @@ import PersonalDataCard from '../components/PersonalDataCard';
 import { trpc } from '../utils/trpc';
 import MainLayout from '../layouts/MainLayout';
 import { getSession, useSession } from 'next-auth/react';
+import { redirectIfSession } from '../utils/redirectIfSession';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
 
-  return !session
-    ? {
-        redirect: {
-          destination: '/',
-          permanent: false,
-        },
-      }
-    : {
-        props: {
-          session,
-          query: ctx.query,
-        },
-      };
+  return redirectIfSession(session, false, '/', ctx);
 };
 
 const Dashboard: NextPage = () => {
