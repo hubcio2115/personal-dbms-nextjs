@@ -6,6 +6,7 @@ import { getSession, signIn } from 'next-auth/react';
 import { useCallback } from 'react';
 import Head from 'next/head';
 import MainLayout from '../layouts/MainLayout';
+import Link from 'next/link';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
@@ -57,9 +58,9 @@ const Home: NextPage = () => {
           className="flex w-full flex-auto items-center justify-center"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="card w-96 bg-base-100 shadow-xl">
+          <div className="card w-96 bg-primary shadow-xl">
             <div className="card-body">
-              <h2 className="card-title">Login Page</h2>
+              <h2 className="card-title text-primary-content">Login Page</h2>
 
               <div>
                 <input
@@ -84,7 +85,9 @@ const Home: NextPage = () => {
               </div>
 
               <div className="card-actions items-center justify-between">
-                <button className="btn-secondary btn" type="submit">
+                <Link href="/register">Don&apos;t have account yet?</Link>
+
+                <button className="btn-success btn" type="submit">
                   Login
                 </button>
               </div>
