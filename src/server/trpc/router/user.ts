@@ -1,15 +1,15 @@
 import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { z } from 'zod';
 import {
+  registerUserSchema,
   userSchema,
-  userSchemaWithoutId,
 } from '../../../common/validation/user';
 import { TRPCError } from '@trpc/server';
 import { hash } from 'argon2';
 
 export const userRouter = router({
   createNewUser: publicProcedure
-    .input(userSchemaWithoutId.omit({ role: true }))
+    .input(registerUserSchema)
     .mutation(async ({ ctx, input: { password, email } }) => {
       const passwd = await hash(password);
 
