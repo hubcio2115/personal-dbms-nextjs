@@ -17,15 +17,15 @@ import Input from '../../layouts/Input';
 import { trpc } from '../../utils/trpc';
 import { splitCamelCaseAndCapitalize } from '../../utils/[id]';
 
-type PersonalDataForm = {
+type PersonalDataFormProps = {
   id: string;
 };
 
-const PersonalDataForm: FC<PersonalDataForm> = ({ id }) => {
+const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
-  const isLoggedIn = useSession().status === 'authenticated';
+  const { data: sessionData } = useSession();
 
   const getByIdQueryKey = useMemo(
     () => [['personalData', 'byId'], { input: { id }, type: 'query' }],
@@ -98,7 +98,8 @@ const PersonalDataForm: FC<PersonalDataForm> = ({ id }) => {
           <button className="btn self-start">&#8592; back</button>
         </Link>
 
-        {isLoggedIn ? (
+        {sessionData?.user.role === 'ADMIN' ||
+        data?.userId === sessionData?.user.userId ? (
           <div className="flex gap-3 justify-self-end">
             <button
               className="btn-success btn"
@@ -107,6 +108,7 @@ const PersonalDataForm: FC<PersonalDataForm> = ({ id }) => {
             >
               Edit
             </button>
+
             <button
               className={clsx('btn-error btn', deleteLoading ? 'loading' : '')}
               disabled={deleteLoading}
