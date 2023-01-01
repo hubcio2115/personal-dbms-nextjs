@@ -5,7 +5,7 @@ import { clsx } from 'clsx';
 import PersonalDataCard from '../components/PersonalDataCard';
 import { trpc } from '../utils/trpc';
 import MainLayout from '../layouts/MainLayout';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import { redirectIfSession } from '../utils/redirectIfSession';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -16,7 +16,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 const Dashboard: NextPage = () => {
   const { data } = trpc.personalData.getAll.useQuery();
-  const { data: sessionData } = useSession();
 
   return (
     <>
@@ -36,11 +35,7 @@ const Dashboard: NextPage = () => {
           )}
         >
           {data?.map((personalData) => (
-            <PersonalDataCard
-              key={personalData.id}
-              {...personalData}
-              email={sessionData?.user.email}
-            />
+            <PersonalDataCard key={personalData.id} {...personalData} />
           )) ?? <progress className="progress progress-primary w-56" />}
         </div>
       </MainLayout>
