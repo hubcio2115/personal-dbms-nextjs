@@ -24,7 +24,7 @@ const LoginForm: FC = () => {
     try {
       signIn('credentials', { ...data, callbackUrl: '/dashboard' });
     } catch (err) {
-      console.error(err);
+      if (process.env.NODE_ENV === 'development') console.error(err);
     }
   }, []);
 
