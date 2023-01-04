@@ -8,6 +8,7 @@ import {
   type RegisterUser,
   registerUserSchema,
 } from '../../common/validation/user';
+import Input from '../../layouts/Input';
 import { trpc } from '../../utils/trpc';
 
 const RegisterForm: FC = () => {
@@ -33,41 +34,28 @@ const RegisterForm: FC = () => {
       },
     });
   };
+
   return (
     <form
-      className="mt-5 flex flex-auto flex-col justify-center gap-6 md:w-1/2 xl:w-1/3"
+      className="prose mt-5 flex flex-auto flex-col justify-center gap-7 md:w-1/2 xl:w-1/3"
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="card w-full bg-primary xl:mb-24">
         <div className="card-body">
-          <h2 className="card-title text-primary-content">Register Page</h2>
+          <h1 className="card-title text-primary-content">Register Page</h1>
 
-          <div className="form-control">
-            <label className="label text-primary-content">
-              <span className="label-text">Email:</span>
-            </label>
-
+          <Input label="Email" errorMessage={errors.email?.message}>
             <input
               type="text"
               className={clsx(
                 'input',
-                !!errors.confirmPassword ? 'input-bordered input-error' : '',
+                !!errors.email ? 'input-bordered input-error' : '',
               )}
               {...register('email')}
             />
+          </Input>
 
-            <label className="label">
-              {!!errors.email ? (
-                <span className="label-text-alt">{errors.email.message}</span>
-              ) : null}
-            </label>
-          </div>
-
-          <div className="form-control">
-            <label className="label text-primary-content">
-              <span className="label-text">Password:</span>
-            </label>
-
+          <Input label="Password" errorMessage={errors.password?.message}>
             <input
               type="text"
               className={clsx(
@@ -76,21 +64,12 @@ const RegisterForm: FC = () => {
               )}
               {...register('password')}
             />
+          </Input>
 
-            <label className="label">
-              {!!errors.password ? (
-                <span className="label-text-alt">
-                  {errors.password.message}
-                </span>
-              ) : null}
-            </label>
-          </div>
-
-          <div className="form-control">
-            <label className="label text-primary-content">
-              <span className="label-text">Confirm Password:</span>
-            </label>
-
+          <Input
+            label="Confirm Password"
+            errorMessage={errors.confirmPassword?.message}
+          >
             <input
               type="text"
               className={clsx(
@@ -99,19 +78,40 @@ const RegisterForm: FC = () => {
               )}
               {...register('confirmPassword')}
             />
+          </Input>
+
+          <div className="form-control flex-row">
+            <label className="label cursor-pointer">
+              <input
+                type="checkbox"
+                {...register('isPrivacyPolicyAccepted')}
+                className={clsx(
+                  'checkbox mr-2',
+                  !!errors.isPrivacyPolicyAccepted
+                    ? 'checkbox-error'
+                    : 'checkbox-success',
+                )}
+              />
+
+              <span className="label-text">
+                <Link href="/privacyPolicy">Accept Privacy Policy?</Link>{' '}
+              </span>
+            </label>
 
             <label className="label">
-              {!!errors.confirmPassword ? (
+              {!!errors.isPrivacyPolicyAccepted ? (
                 <span className="label-text-alt">
-                  {errors.confirmPassword.message}
+                  {errors.isPrivacyPolicyAccepted.message}
                 </span>
               ) : null}
             </label>
           </div>
 
-          <Link href="/">Already have an account?</Link>
-
           <div className="card-actions flex justify-between">
+            <Link href="/" className="pt-3 pb-4">
+              Already have an account?
+            </Link>
+
             <button
               className="btn-error btn"
               type="button"
