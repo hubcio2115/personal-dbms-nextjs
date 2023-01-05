@@ -11,7 +11,9 @@ export const personalDataRouter = router({
     ctx.session.user.role === 'ADMIN'
       ? ctx.prisma.personalData.findMany()
       : ctx.prisma.personalData.findMany({
-          where: { OR: { isPrivate: false, userId: ctx.session?.user.userId } },
+          where: {
+            OR: [{ isPrivate: false }, { userId: ctx.session.user.userId }],
+          },
         }),
   ),
 

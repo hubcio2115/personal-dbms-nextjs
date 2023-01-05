@@ -12,13 +12,14 @@ const PersonalDataCard: FC<PersonalDataProps> = ({
   lastName,
   maidenName,
 }) => (
-  <div className="card w-80 justify-self-center bg-primary-content text-primary shadow-xl hover:cursor-pointer">
-    <Link href={id}>
-      <div className="card-body">
-        <h2 className="card-title">{`${firstName} ${maidenName} ${lastName}`}</h2>
-      </div>
-    </Link>
-  </div>
+  <Link
+    href={id}
+    className="card w-80 justify-self-center bg-primary-content text-primary shadow-xl hover:cursor-pointer"
+  >
+    <div className="card-body">
+      <h2 className="card-title">{`${firstName} ${maidenName} ${lastName}`}</h2>
+    </div>
+  </Link>
 );
 
 export default PersonalDataCard;
