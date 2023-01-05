@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { type Login, loginSchema } from '../../common/validation/auth';
 import Link from 'next/link';
 import clsx from 'clsx';
+import Input from '../../layouts/Input';
 
 const LoginForm: FC = () => {
   const {
@@ -35,13 +36,9 @@ const LoginForm: FC = () => {
     >
       <div className="card w-96 bg-primary shadow-xl">
         <div className="card-body">
-          <h2 className="card-title text-primary-content">Login Page</h2>
+          <h1 className="card-title text-primary-content">Login Page</h1>
 
-          <div className="form-control">
-            <label className="label text-primary-content">
-              <span className="label-text">Email:</span>
-            </label>
-
+          <Input label="Email" errorMessage={errors.email?.message}>
             <input
               type="text"
               className={clsx(
@@ -50,19 +47,9 @@ const LoginForm: FC = () => {
               )}
               {...register('email')}
             />
+          </Input>
 
-            <label className="label">
-              {!!errors.email ? (
-                <span className="label-text-alt">{errors.email.message}</span>
-              ) : null}
-            </label>
-          </div>
-
-          <div className="form-control">
-            <label className="label text-primary-content">
-              <span className="label-text">Password:</span>
-            </label>
-
+          <Input label="Password" errorMessage={errors.password?.message}>
             <input
               type="password"
               className={clsx(
@@ -71,18 +58,10 @@ const LoginForm: FC = () => {
               )}
               {...register('password')}
             />
+          </Input>
 
-            <label className="label">
-              {!!errors.password ? (
-                <span className="label-text-alt">
-                  {errors.password.message}
-                </span>
-              ) : null}
-            </label>
-          </div>
-
-          <div className="card-actions items-center justify-between">
-            <Link href="/register">Don&apos;t have account yet?</Link>
+          <div className="card-actions prose items-center justify-between">
+            <Link href="/register">Don&apos;t have an account yet?</Link>
 
             <button className="btn-success btn" type="submit">
               Login

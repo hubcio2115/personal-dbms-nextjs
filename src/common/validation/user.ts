@@ -26,6 +26,9 @@ export const registerUserSchema = userSchemaWithoutId
   .omit({ personalData: true, role: true })
   .extend({
     confirmPassword: z.string().min(1, 'This field is required!'),
+    isPrivacyPolicyAccepted: z
+      .boolean()
+      .refine((value) => value, 'Please accept our privacy policy'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ['confirmPassword'],
