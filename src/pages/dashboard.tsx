@@ -29,7 +29,7 @@ const Dashboard: NextPage = () => {
         <div
           className={clsx(
             !!data
-              ? 'gird-cols-1 grid gap-4 py-8  md:grid-cols-2 md:py-16 lg:grid-cols-3 xl:grid-cols-4'
+              ? 'gird-cols-1 grid grid-rows-6 gap-4 py-8  md:grid-cols-2 md:grid-rows-5 md:py-16 lg:grid-cols-3 xl:grid-cols-4 xl:grid-rows-none'
               : 'flex items-center justify-center',
             'flex-auto',
           )}
