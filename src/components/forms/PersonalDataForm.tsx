@@ -55,7 +55,9 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
     });
 
   const deleteValue = () => {
-    deleteData({ id });
+    if (confirm('Czy na pewno chcesz usunąć zasób?')) {
+      deleteData({ id });
+    }
   };
 
   const toggleIsEditing = () => {
