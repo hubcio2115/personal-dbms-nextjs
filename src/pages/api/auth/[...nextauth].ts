@@ -8,7 +8,7 @@ import { verify } from 'argon2';
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
-    jwt: async ({ token, user }) => {
+    jwt: ({ token, user }) => {
       if (!!user) {
         token.userId = user.id;
         token.email = user.email;

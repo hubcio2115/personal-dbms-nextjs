@@ -1,7 +1,7 @@
 import type { GetServerSidePropsContext } from 'next';
 import { type Session } from 'next-auth';
 
-export const redirectIfSession = async (
+export const redirectIfSession = (
   session: Session | null,
   isAuthenticated: boolean,
   destination: string,
