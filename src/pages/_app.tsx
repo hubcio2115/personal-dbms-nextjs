@@ -3,18 +3,20 @@ import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import { trpc } from '../utils/trpc';
+import { api } from '../utils/api';
 
 import '../styles/globals.css';
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
-}) => (
-  <SessionProvider session={session}>
-    <Component {...pageProps} />
-    <ReactQueryDevtools />
-  </SessionProvider>
-);
+}) => {
+  return (
+    <SessionProvider session={session}>
+      <Component {...pageProps} />
+      <ReactQueryDevtools />
+    </SessionProvider>
+  );
+};
 
-export default trpc.withTRPC(MyApp);
+export default api.withTRPC(MyApp);

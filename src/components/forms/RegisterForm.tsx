@@ -9,11 +9,11 @@ import {
   registerUserSchema,
 } from '../../common/validation/user';
 import Input from '../../layouts/Input';
-import { trpc } from '../../utils/trpc';
+import { api } from '../../utils/api';
 
 const RegisterForm: FC = () => {
   const { mutate: addNewUser, isLoading } =
-    trpc.user.createNewUser.useMutation();
+    api.user.createNewUser.useMutation();
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState('');
 
