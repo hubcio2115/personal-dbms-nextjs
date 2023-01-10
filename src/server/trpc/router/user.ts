@@ -11,10 +11,17 @@ export const userRouter = router({
   createNewUser: publicProcedure
     .input(registerUserSchema)
     .mutation(async ({ ctx, input: { password, email } }) => {
+      const isInDb = await ctx.prisma.user.findFirst({ where: { email } });
       const passwd = await hash(password);
 
-      return ctx.prisma.user.create({
-        data: { role: 'USER', email, password: passwd },
+      if (isInDb === null)
+        return ctx.prisma.user.create({
+          data: { role: 'USER', email, password: passwd },
+        });
+
+      throw new TRPCError({
+        message: 'Provided email is taken!',
+        code: 'CONFLICT',
       });
     }),
 
