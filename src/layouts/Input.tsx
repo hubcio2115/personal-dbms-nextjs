@@ -15,9 +15,9 @@ const Input: FC<InputProps> = ({ label, errorMessage, children }) => {
       {children}
 
       <label className="label">
-        {!!errorMessage ? (
+        {!!errorMessage && (
           <span className="label-text-alt">{errorMessage}</span>
-        ) : null}
+        )}
       </label>
     </div>
   );

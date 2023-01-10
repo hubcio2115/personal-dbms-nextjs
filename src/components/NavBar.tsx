@@ -13,14 +13,14 @@ const NavBar: FC = () => {
         </Link>
       </div>
 
-      {status === 'authenticated' ? (
+      {status === 'authenticated' && (
         <button
           className="btn-error btn"
           onClick={() => signOut({ callbackUrl: '/' })}
         >
           Log out
         </button>
-      ) : null}
+      )}
     </div>
   );
 };

@@ -100,8 +100,8 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
           <button className="btn self-start">&#8592; back</button>
         </Link>
 
-        {sessionData?.user.role === 'ADMIN' ||
-        data?.userId === sessionData?.user.userId ? (
+        {(sessionData?.user.role === 'ADMIN' ||
+          data?.userId === sessionData?.user.userId) && (
           <div className="flex gap-3 justify-self-end">
             <button
               className="btn-success btn"
@@ -120,7 +120,7 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
               Delete
             </button>
           </div>
-        ) : null}
+        )}
       </div>
 
       <div className="card w-full bg-primary xl:mb-24">
@@ -168,7 +168,7 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
                   {...register('lastName')}
                   className={clsx(
                     'input input-md flex-auto',
-                    !!errors.firstName ? 'input-bordered input-error' : '',
+                    !!errors.lastName ? 'input-bordered input-error' : '',
                   )}
                 />
               </Input>
@@ -193,7 +193,7 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
                   {...register('age', { valueAsNumber: true })}
                   className={clsx(
                     'input input-md flex-auto',
-                    !!errors.maidenName ? 'input-bordered input-error' : '',
+                    !!errors.age ? 'input-bordered input-error' : '',
                   )}
                 />
               </Input>
@@ -215,7 +215,7 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
                   {...register('phone')}
                   className={clsx(
                     'input input-md flex-auto',
-                    !!errors.maidenName ? 'input-bordered input-error' : '',
+                    !!errors.phone ? 'input-bordered input-error' : '',
                   )}
                 />
               </Input>
