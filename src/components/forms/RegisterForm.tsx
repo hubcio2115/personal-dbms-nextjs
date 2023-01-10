@@ -31,7 +31,7 @@ const RegisterForm: FC = () => {
   const onSubmit = (registerData: RegisterUser) => {
     addNewUser(registerData, {
       onSuccess: () => {
-        router.push('/');
+        void router.push('/');
       },
       onError: ({ message }) => {
         setErrorMessage(message);
@@ -42,7 +42,7 @@ const RegisterForm: FC = () => {
   return (
     <form
       className="prose mt-5 flex flex-auto flex-col justify-center gap-7 md:w-1/2 xl:w-1/3"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={void handleSubmit(onSubmit)}
     >
       <div className="card w-full bg-primary xl:mb-24">
         <div className="card-body">

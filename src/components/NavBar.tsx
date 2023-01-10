@@ -5,6 +5,10 @@ import { type FC } from 'react';
 const NavBar: FC = () => {
   const { status } = useSession();
 
+  const handleSignOut = () => {
+    void signOut({ callbackUrl: '/' });
+  };
+
   return (
     <div className="navbar bg-neutral">
       <div className="flex-1">
@@ -14,10 +18,7 @@ const NavBar: FC = () => {
       </div>
 
       {status === 'authenticated' && (
-        <button
-          className="btn-error btn"
-          onClick={() => signOut({ callbackUrl: '/' })}
-        >
+        <button className="btn-error btn" onClick={handleSignOut}>
           Log out
         </button>
       )}
