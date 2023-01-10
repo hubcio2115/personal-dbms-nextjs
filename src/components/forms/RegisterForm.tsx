@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { type FC } from 'react';
+import { useState, type FC } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   type RegisterUser,
@@ -15,6 +15,7 @@ const RegisterForm: FC = () => {
   const { mutate: addNewUser, isLoading } =
     trpc.user.createNewUser.useMutation();
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState('');
 
   const {
     formState: { errors },
@@ -31,6 +32,9 @@ const RegisterForm: FC = () => {
     addNewUser(registerData, {
       onSuccess: () => {
         router.push('/');
+      },
+      onError: ({ message }) => {
+        setErrorMessage(message);
       },
     });
   };
@@ -115,7 +119,10 @@ const RegisterForm: FC = () => {
             <button
               className="btn-error btn"
               type="button"
-              onClick={() => reset()}
+              onClick={() => {
+                setErrorMessage('');
+                reset();
+              }}
             >
               Reset
             </button>
@@ -128,6 +135,27 @@ const RegisterForm: FC = () => {
               Register
             </button>
           </div>
+
+          {!!errorMessage ? (
+            <div className="alert alert-error shadow-lg">
+              <div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 flex-shrink-0 stroke-current"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span>{errorMessage}</span>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </form>
