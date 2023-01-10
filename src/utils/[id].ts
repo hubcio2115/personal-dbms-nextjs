@@ -4,8 +4,8 @@ export const capitalize = (str: string) =>
 export const splitCamelCaseAndCapitalize = (str: string) => {
   const split = str.replace(/([a-z])([A-Z])/g, '$1 $2').split(' ');
 
-  if (split.length === 1) return capitalize(split[0] ?? '');
-  if (split.length === 2) return `${capitalize(split[0] ?? '')} ${split[1]}`;
+  if (!!split[1]) return `${capitalize(split[0] ?? '')} ${split[1]}`;
+  if (!!split[0]) return capitalize(split[0] ?? '');
 
   return str;
 };
