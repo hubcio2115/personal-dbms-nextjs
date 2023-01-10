@@ -4,9 +4,9 @@ import type {
   NextPage,
 } from 'next';
 import { createProxySSGHelpers } from '@trpc/react-query/ssg';
-import { appRouter } from '../server/trpc/router/_app';
+import { appRouter } from '../server/api/root';
 import superjson from 'superjson';
-import { createContextInner } from '../server/trpc/context';
+import { createInnerTRPCContext } from '../server/api/trpc';
 import MainLayout from '../layouts/MainLayout';
 import { getSession } from 'next-auth/react';
 import PersonalDataForm from '../components/forms/PersonalDataForm';
@@ -17,7 +17,7 @@ export const getServerSideProps = async (
   const session = await getSession(ctx);
   const ssg = createProxySSGHelpers({
     router: appRouter,
-    ctx: await createContextInner({ session }),
+    ctx: createInnerTRPCContext({ session }),
     transformer: superjson,
   });
 

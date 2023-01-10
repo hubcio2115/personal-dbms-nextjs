@@ -1,4 +1,4 @@
-import { router, publicProcedure, protectedProcedure } from '../trpc';
+import { publicProcedure, protectedProcedure, createTRPCRouter } from '../trpc';
 import { z } from 'zod';
 import {
   registerUserSchema,
@@ -7,7 +7,7 @@ import {
 import { TRPCError } from '@trpc/server';
 import { hash } from 'argon2';
 
-export const userRouter = router({
+export const userRouter = createTRPCRouter({
   createNewUser: publicProcedure
     .input(registerUserSchema)
     .mutation(async ({ ctx, input: { password, email } }) => {

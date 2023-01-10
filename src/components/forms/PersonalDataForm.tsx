@@ -14,7 +14,7 @@ import {
   type PersonalDataWithoutId,
 } from '../../common/validation/personalData';
 import Input from '../../layouts/Input';
-import { trpc } from '../../utils/trpc';
+import { api } from '../../utils/api';
 import { splitCamelCaseAndCapitalize } from '../../utils/[id]';
 
 type PersonalDataFormProps = {
@@ -32,10 +32,10 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
     [id],
   );
 
-  const { data } = trpc.personalData.byId.useQuery({ id });
+  const { data } = api.personalData.byId.useQuery({ id });
 
   const { mutate: updateData, isLoading: updateLoading } =
-    trpc.personalData.update.useMutation({
+    api.personalData.update.useMutation({
       onMutate: (mutationData) => {
         queryClient.setQueryData(getByIdQueryKey, mutationData);
       },
@@ -48,7 +48,7 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
     });
 
   const { mutate: deleteData, isLoading: deleteLoading } =
-    trpc.personalData.delete.useMutation({
+    api.personalData.delete.useMutation({
       onSettled: () => {
         router.push('/');
       },

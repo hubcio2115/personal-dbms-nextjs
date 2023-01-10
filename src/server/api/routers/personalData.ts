@@ -1,4 +1,4 @@
-import { router, protectedProcedure } from '../trpc';
+import { createTRPCRouter, protectedProcedure } from '../trpc';
 import { z } from 'zod';
 import {
   personalDataSchema,
@@ -6,7 +6,7 @@ import {
 } from '../../../common/validation/personalData';
 import { TRPCError } from '@trpc/server';
 
-export const personalDataRouter = router({
+export const personalDataRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) =>
     ctx.session.user.role === 'ADMIN'
       ? ctx.prisma.personalData.findMany()

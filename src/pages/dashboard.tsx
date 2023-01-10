@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { clsx } from 'clsx';
 
 import PersonalDataCard from '../components/PersonalDataCard';
-import { trpc } from '../utils/trpc';
+import { api } from '../utils/api';
 import MainLayout from '../layouts/MainLayout';
 import { getSession } from 'next-auth/react';
 import { redirectIfSession } from '../utils/redirectIfSession';
@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 const Dashboard: NextPage = () => {
-  const { data } = trpc.personalData.getAll.useQuery();
+  const { data } = api.personalData.getAll.useQuery();
 
   return (
     <>
