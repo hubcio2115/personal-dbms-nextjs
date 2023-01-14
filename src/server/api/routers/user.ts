@@ -2,7 +2,8 @@ import { publicProcedure, protectedProcedure, createTRPCRouter } from '../trpc';
 import { z } from 'zod';
 import {
   registerUserSchema,
-  userSchema,
+  updateEmailSchema,
+  updatePasswordSchema,
 } from '../../../common/validation/user';
 import { TRPCError } from '@trpc/server';
 import { hash } from 'argon2';
@@ -25,15 +26,50 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
-  updateUser: protectedProcedure
-    .input(userSchema)
-    .query(({ ctx, input: newUser }) => {
-      if (
+  updateEmail: protectedProcedure
+    .input(updateEmailSchema)
+    .mutation(async ({ ctx, input: newUser }) => {
+      const isAuthorized =
         ctx.session.user.role === 'ADMIN' ||
-        ctx.session.user.userId === newUser.id
-      ) {
-        const { id, ...user } = newUser;
-        return ctx.prisma.user.update({ where: { id }, data: user });
+        ctx.session.user.userId === newUser.id;
+
+      if (isAuthorized) {
+        const { id, email } = newUser;
+        const isEmailTaken = await ctx.prisma.user.findFirst({
+          where: { email },
+        });
+
+        if (!isEmailTaken)
+          return ctx.prisma.user.update({
+            where: { id },
+            data: {
+              email,
+            },
+          });
+
+        throw new TRPCError({
+          message: 'Provided email is taken!',
+          code: 'CONFLICT',
+        });
+      }
+
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
+    }),
+
+  updatePassword: protectedProcedure
+    .input(updatePasswordSchema)
+    .mutation(async ({ ctx, input: newUser }) => {
+      const isAuthorized =
+        ctx.session.user.role === 'ADMIN' ||
+        ctx.session.user.userId === newUser.id;
+
+      if (isAuthorized) {
+        const { id, password } = newUser;
+
+        return ctx.prisma.user.update({
+          where: { id },
+          data: { password: await hash(password) },
+        });
       }
 
       throw new TRPCError({ code: 'UNAUTHORIZED' });
@@ -41,7 +77,7 @@ export const userRouter = createTRPCRouter({
 
   deleteUser: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findFirst({
         where: { id: input.id },
       });
@@ -50,10 +86,13 @@ export const userRouter = createTRPCRouter({
         if (
           ctx.session.user.role === 'ADMIN' ||
           user.id === ctx.session.user.userId
-        )
+        ) {
+          await ctx.prisma.personalData.delete({ where: { userId: input.id } });
+
           return ctx.prisma.user.delete({
             where: { id: input.id },
           });
+        }
 
         throw new TRPCError({ code: 'UNAUTHORIZED' });
       }
