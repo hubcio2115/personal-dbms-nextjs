@@ -10,6 +10,7 @@ import { createInnerTRPCContext } from '../server/api/trpc';
 import MainLayout from '../layouts/MainLayout';
 import { getSession } from 'next-auth/react';
 import PersonalDataForm from '../components/forms/PersonalDataForm';
+import Head from 'next/head';
 
 export const getServerSideProps = async (
   ctx: GetServerSidePropsContext<{ id: string }>,
@@ -46,6 +47,10 @@ const User: NextPage<
 > = ({ id }) => {
   return (
     <MainLayout className="mt-2 flex-col items-center justify-center md:mt-0">
+      <Head>
+        <title>Personal Data</title>
+      </Head>
+
       <PersonalDataForm id={id} />
     </MainLayout>
   );
