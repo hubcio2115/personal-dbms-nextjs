@@ -6,7 +6,7 @@ const NavBar: FC = () => {
   const { status } = useSession();
 
   const handleSignOut = () => {
-    void signOut({ callbackUrl: '/' });
+    signOut({ callbackUrl: '/' });
   };
 
   return (
@@ -18,9 +18,15 @@ const NavBar: FC = () => {
       </div>
 
       {status === 'authenticated' && (
-        <button className="btn-error btn" onClick={handleSignOut}>
-          Log out
-        </button>
+        <div className="flex gap-4">
+          <Link href="/preferences/general">
+            <button className="btn-info btn">Preferences</button>
+          </Link>
+
+          <button className="btn-error btn" onClick={handleSignOut}>
+            Log out
+          </button>
+        </div>
       )}
     </div>
   );
