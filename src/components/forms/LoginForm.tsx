@@ -23,7 +23,7 @@ const LoginForm: FC = () => {
 
   const onSubmit = useCallback((data: Login) => {
     try {
-      void signIn('credentials', { ...data, callbackUrl: '/dashboard' });
+      signIn('credentials', { ...data, callbackUrl: '/dashboard' });
     } catch (err) {
       if (process.env.NODE_ENV === 'development') console.error(err);
     }
@@ -32,7 +32,7 @@ const LoginForm: FC = () => {
   return (
     <form
       className="flex w-full flex-auto items-center justify-center"
-      onSubmit={void handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="card w-96 bg-primary shadow-xl">
         <div className="card-body">

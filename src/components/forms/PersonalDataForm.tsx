@@ -79,6 +79,7 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
   const onSubmit: SubmitHandler<PersonalDataWithoutId> = (data) => {
     updateData({ id, ...data });
   };
+
   const {
     register,
     handleSubmit,
@@ -93,7 +94,7 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
   return (
     <form
       className="mt-5 flex flex-auto flex-col justify-center gap-6 md:w-1/2 xl:w-1/3"
-      onSubmit={void handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="flex justify-between">
         <Link href="/">

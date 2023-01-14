@@ -42,7 +42,7 @@ const RegisterForm: FC = () => {
   return (
     <form
       className="prose mt-5 flex flex-auto flex-col justify-center gap-7 md:w-1/2 xl:w-1/3"
-      onSubmit={void handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="card w-full bg-primary xl:mb-24">
         <div className="card-body">
@@ -50,7 +50,7 @@ const RegisterForm: FC = () => {
 
           <Input label="Email" errorMessage={errors.email?.message}>
             <input
-              type="text"
+              type="email"
               className={clsx(
                 'input',
                 !!errors.email ? 'input-bordered input-error' : '',
@@ -136,7 +136,7 @@ const RegisterForm: FC = () => {
             </button>
           </div>
 
-          {!!errorMessage ? (
+          {!!errorMessage && (
             <div className="alert alert-error shadow-lg">
               <div>
                 <svg
@@ -155,7 +155,7 @@ const RegisterForm: FC = () => {
                 <span>{errorMessage}</span>
               </div>
             </div>
-          ) : null}
+          )}
         </div>
       </div>
     </form>
