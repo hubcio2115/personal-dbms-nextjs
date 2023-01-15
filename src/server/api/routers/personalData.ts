@@ -91,24 +91,22 @@ export const personalDataRouter = createTRPCRouter({
       return null;
     }),
 
-  create: protectedProcedure
-    .input(
-      personalDataSchemaWithoutId.extend({
-        userId: z.string(),
-      }),
-    )
+  upsert: protectedProcedure
+    .input(personalDataSchemaWithoutId)
     .mutation(async ({ ctx, input: data }) => {
       const foundUser = await ctx.prisma.user.findFirst({
         where: { id: data.userId },
       });
 
-      if (!!foundUser) {
+      if (!!foundUser && !!data.userId) {
         if (
           ctx.session.user.role === 'ADMIN' ||
           foundUser.id === ctx.session.user.userId
         )
-          return ctx.prisma.personalData.create({
-            data,
+          return ctx.prisma.personalData.upsert({
+            where: { userId: foundUser.id },
+            create: { ...data, userId: data.userId },
+            update: data,
           });
 
         throw new TRPCError({ code: 'UNAUTHORIZED' });
