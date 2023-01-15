@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 import type { GetServerSideProps, NextPage } from 'next';
 import { getSession, useSession } from 'next-auth/react';
-import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
@@ -101,11 +100,8 @@ const Preferences: NextPage = () => {
 
   return (
     <SettingsLayout>
-      <Head>
-        <title>Preferences</title>
-      </Head>
-
       <h2>General</h2>
+
       <div className="divider">Email</div>
 
       <form

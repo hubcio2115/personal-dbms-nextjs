@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { GetServerSideProps, NextPage } from 'next';
 import { getSession, useSession } from 'next-auth/react';
-import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import emailjs from '@emailjs/browser';
@@ -62,11 +61,9 @@ const TechnicalSupportForm: NextPage = () => {
 
   return (
     <SettingsLayout>
-      <Head>
-        <title>Preferences</title>
-      </Head>
-
       <h2>Technical Support Form</h2>
+
+      <div className="divider" />
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input label="Title" errorMessage={errors.title?.message}>

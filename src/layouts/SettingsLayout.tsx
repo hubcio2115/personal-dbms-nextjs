@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import Head from 'next/head';
 import Link from 'next/link';
 import type { FC, PropsWithChildren } from 'react';
 import NavBar from '../components/NavBar';
@@ -12,6 +13,10 @@ const SettingsLayout: FC<PropsWithChildren<SettingsLayoutProps>> = ({
   children,
 }) => (
   <div className="flex min-h-screen flex-col pb-4">
+    <Head>
+      <title>Preferences</title>
+    </Head>
+
     <nav>
       <NavBar />
     </nav>
@@ -30,6 +35,9 @@ const SettingsLayout: FC<PropsWithChildren<SettingsLayoutProps>> = ({
           <Link href="/preferences/technicalSupportForm">
             Technical Support
           </Link>
+        </li>
+        <li>
+          <Link href="/preferences/personalData">Personal Data</Link>
         </li>
       </ul>
 
