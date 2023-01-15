@@ -38,6 +38,13 @@ export const personalDataRouter = createTRPCRouter({
       return null;
     }),
 
+  byUserId: protectedProcedure.query(
+    async ({ ctx }) =>
+      await ctx.prisma.personalData.findFirst({
+        where: { userId: ctx.session.user.userId },
+      }),
+  ),
+
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
