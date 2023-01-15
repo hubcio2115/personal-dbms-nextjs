@@ -7,15 +7,27 @@ import {
 import { TRPCError } from '@trpc/server';
 
 export const personalDataRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(({ ctx }) =>
-    ctx.session.user.role === 'ADMIN'
-      ? ctx.prisma.personalData.findMany()
-      : ctx.prisma.personalData.findMany({
-          where: {
-            OR: [{ isPrivate: false }, { userId: ctx.session.user.userId }],
-          },
-        }),
-  ),
+  getFiltered: protectedProcedure
+    .input(z.object({ searchParams: z.string() }))
+    .query(({ ctx, input: { searchParams } }) =>
+      ctx.session.user.role === 'ADMIN'
+        ? ctx.prisma.personalData.findMany({
+            where: { firstName: { contains: searchParams } },
+          })
+        : ctx.prisma.personalData.findMany({
+            where: {
+              AND: [
+                {
+                  OR: [
+                    { isPrivate: false },
+                    { userId: ctx.session.user.userId },
+                  ],
+                },
+                { firstName: { contains: searchParams } },
+              ],
+            },
+          }),
+    ),
 
   byId: protectedProcedure
     .input(z.object({ id: z.string() }))
