@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextPage } from 'next';
+import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { clsx } from 'clsx';
 
@@ -11,13 +11,13 @@ import { type ChangeEvent, useState, useRef, useMemo } from 'react';
 import { useDebounce } from '../common/hooks/useDebounce';
 import { v5 as uuidv5 } from 'uuid';
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = await getSession(ctx);
 
   return redirectIfSession(session, false, '/', ctx);
-};
+}
 
-const Dashboard: NextPage = () => {
+export default function Dashboard() {
   const [searchParams, setSearchParams] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -113,6 +113,4 @@ const Dashboard: NextPage = () => {
       </MainLayout>
     </>
   );
-};
-
-export default Dashboard;
+}

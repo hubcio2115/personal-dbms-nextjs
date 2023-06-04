@@ -1,13 +1,12 @@
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { type FC } from 'react';
 
-const NavBar: FC = () => {
+export default function NavBar() {
   const { status } = useSession();
 
-  const handleSignOut = () => {
-    signOut({ callbackUrl: '/' });
-  };
+  function handleSignOut() {
+    void signOut({ callbackUrl: '/' });
+  }
 
   return (
     <div className="navbar bg-neutral">
@@ -30,6 +29,4 @@ const NavBar: FC = () => {
       )}
     </div>
   );
-};
-
-export default NavBar;
+}

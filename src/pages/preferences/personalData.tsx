@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
-import type { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -13,7 +12,7 @@ import Input from '~/layouts/Input';
 import SettingsLayout from '~/layouts/SettingsLayout';
 import { api } from '~/utils/api';
 
-const PersonalData: NextPage = () => {
+export default function PersonalData() {
   const { data: personalData } = api.personalData.byUserId.useQuery();
   const queryClient = useQueryClient();
   const { data: userData } = useSession();
@@ -44,7 +43,7 @@ const PersonalData: NextPage = () => {
 
   useEffect(() => {
     if (!!personalData) {
-      const { id, ...data } = personalData;
+      const { id: _id, ...data } = personalData;
 
       reset(data);
     }
@@ -66,7 +65,11 @@ const PersonalData: NextPage = () => {
 
       <div className="divider" />
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={() => {
+          handleSubmit(onSubmit);
+        }}
+      >
         <Input label="First Name" errorMessage={errors.firstName?.message}>
           <input
             type="text"
@@ -160,6 +163,4 @@ const PersonalData: NextPage = () => {
       </form>
     </SettingsLayout>
   );
-};
-
-export default PersonalData;
+}

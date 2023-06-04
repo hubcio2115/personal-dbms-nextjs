@@ -1,13 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
-import { type FC, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { type Login, loginSchema } from '~/common/validation/auth';
 import Link from 'next/link';
 import clsx from 'clsx';
 import Input from '~/layouts/Input';
 
-const LoginForm: FC = () => {
+export default function LoginForm() {
   const {
     handleSubmit,
     register,
@@ -23,7 +23,7 @@ const LoginForm: FC = () => {
 
   const onSubmit = useCallback((data: Login) => {
     try {
-      signIn('credentials', { ...data, callbackUrl: '/dashboard' });
+      void signIn('credentials', { ...data, callbackUrl: '/dashboard' });
     } catch (err) {
       if (process.env.NODE_ENV === 'development') console.error(err);
     }
@@ -32,7 +32,9 @@ const LoginForm: FC = () => {
   return (
     <form
       className="flex w-full flex-auto items-center justify-center"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={() => {
+        handleSubmit(onSubmit);
+      }}
     >
       <div className="card w-96 bg-primary shadow-xl">
         <div className="card-body">
@@ -71,6 +73,4 @@ const LoginForm: FC = () => {
       </div>
     </form>
   );
-};
-
-export default LoginForm;
+}

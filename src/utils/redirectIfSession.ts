@@ -1,12 +1,16 @@
-import type { GetServerSidePropsContext } from 'next';
+import {
+  type GetServerSidePropsResult,
+  type GetServerSidePropsContext,
+} from 'next';
 import { type Session } from 'next-auth';
+import { type ParsedUrlQuery } from 'querystring';
 
-export const redirectIfSession = (
+export function redirectIfSession(
   session: Session | null,
   isAuthenticated: boolean,
   destination: string,
   ctx: GetServerSidePropsContext,
-) => {
+): GetServerSidePropsResult<{ session: Session | null, query: ParsedUrlQuery }> {
   const isSession = isAuthenticated ? !!session : !session;
 
   return isSession
@@ -22,4 +26,4 @@ export const redirectIfSession = (
           query: ctx.query,
         },
       };
-};
+}

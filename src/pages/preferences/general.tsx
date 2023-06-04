@@ -1,27 +1,27 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
-import type { GetServerSideProps, NextPage } from 'next';
+import type { GetServerSidePropsContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   type UpdateEmail,
-  updateEmailSchema,
   type UpdatePassword,
+  updateEmailSchema,
   updatePasswordSchema,
-} from '../../common/validation/user';
-import Input from '../../layouts/Input';
-import SettingsLayout from '../../layouts/SettingsLayout';
-import { api } from '../../utils/api';
-import { redirectIfSession } from '../../utils/redirectIfSession';
+} from '~/common/validation/user';
+import Input from '~/layouts/Input';
+import SettingsLayout from '~/layouts/SettingsLayout';
+import { api } from '~/utils/api';
+import { redirectIfSession } from '~/utils/redirectIfSession';
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = await getSession(ctx);
 
   return redirectIfSession(session, false, '/', ctx);
-};
+}
 
-const Preferences: NextPage = () => {
+export default function Preferences() {
   const { data: userData } = useSession();
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const { mutate: deleteUser } = api.user.deleteUser.useMutation();
@@ -105,7 +105,9 @@ const Preferences: NextPage = () => {
       <div className="divider">Email</div>
 
       <form
-        onSubmit={emailFormSubmit(onEmailFormSubmit)}
+        onSubmit={() => {
+          emailFormSubmit(onEmailFormSubmit);
+        }}
         className="flex flex-col"
       >
         <Input label="User mail" errorMessage={emailErrors.email?.message}>
@@ -151,7 +153,11 @@ const Preferences: NextPage = () => {
 
       <div className="divider">Security</div>
 
-      <form onSubmit={passwordFormSubmit(onPasswordFormSubmit)}>
+      <form
+        onSubmit={() => {
+          passwordFormSubmit(onPasswordFormSubmit);
+        }}
+      >
         <Input
           label="New password"
           errorMessage={passwordErrors.password?.message}
@@ -193,6 +199,4 @@ const Preferences: NextPage = () => {
       </button>
     </SettingsLayout>
   );
-};
-
-export default Preferences;
+}

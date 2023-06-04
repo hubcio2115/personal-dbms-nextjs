@@ -1,20 +1,22 @@
 import type {
   GetServerSidePropsContext,
+  GetServerSidePropsResult,
   InferGetServerSidePropsType,
-  NextPage,
 } from 'next';
 import { createProxySSGHelpers } from '@trpc/react-query/ssg';
-import { appRouter } from '../server/api/root';
+import { appRouter } from '~/server/api/root';
 import superjson from 'superjson';
-import { createInnerTRPCContext } from '../server/api/trpc';
-import MainLayout from '../layouts/MainLayout';
+import { createInnerTRPCContext } from '~/server/api/trpc';
+import MainLayout from '~/layouts/MainLayout';
 import { getSession } from 'next-auth/react';
-import PersonalDataForm from '../components/forms/PersonalDataForm';
+import PersonalDataForm from '~/components/forms/PersonalDataForm';
 import Head from 'next/head';
+import { type DehydratedState } from '@tanstack/react-query';
+import { type Session } from 'next-auth';
 
-export const getServerSideProps = async (
+export async function getServerSideProps  (
   ctx: GetServerSidePropsContext<{ id: string }>,
-) => {
+): Promise<GetServerSidePropsResult<{id: string, trpcState: DehydratedState, session: Session | null}>>{
   const session = await getSession(ctx);
   const ssg = createProxySSGHelpers({
     router: appRouter,
@@ -40,11 +42,11 @@ export const getServerSideProps = async (
       permanent: false,
     },
   };
-};
+}
 
-const User: NextPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ id }) => {
+export default function User({
+  id,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <MainLayout className="mt-2 flex-col items-center justify-center md:mt-0">
       <Head>
@@ -54,6 +56,4 @@ const User: NextPage<
       <PersonalDataForm id={id} />
     </MainLayout>
   );
-};
-
-export default User;
+}

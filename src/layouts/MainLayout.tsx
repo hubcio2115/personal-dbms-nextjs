@@ -1,24 +1,24 @@
 import clsx from 'clsx';
-import type { FC, PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import NavBar from '~/components/NavBar';
 
-interface MainLayoutProps {
+interface MainLayoutProps extends PropsWithChildren {
   className?: string;
 }
 
-const MainLayout: FC<PropsWithChildren<MainLayoutProps>> = ({
+export default function MainLayout({
   className = '',
   children,
-}) => (
-  <div className="flex min-h-screen flex-col pb-4">
-    <nav>
-      <NavBar />
-    </nav>
+}: MainLayoutProps) {
+  return (
+    <div className="flex min-h-screen flex-col pb-4">
+      <nav>
+        <NavBar />
+      </nav>
 
-    <main className={clsx('container mx-auto flex flex-auto', className)}>
-      {children}
-    </main>
-  </div>
-);
-
-export default MainLayout;
+      <main className={clsx('container mx-auto flex flex-auto', className)}>
+        {children}
+      </main>
+    </div>
+  );
+}

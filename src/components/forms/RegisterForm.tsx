@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState, type FC } from 'react';
+import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   type RegisterUser,
@@ -11,7 +11,7 @@ import {
 import Input from '~/layouts/Input';
 import { api } from '~/utils/api';
 
-const RegisterForm: FC = () => {
+export default function RegisterForm() {
   const { mutate: addNewUser, isLoading } =
     api.user.createNewUser.useMutation();
   const router = useRouter();
@@ -28,7 +28,7 @@ const RegisterForm: FC = () => {
     resolver: zodResolver(registerUserSchema),
   });
 
-  const onSubmit = (registerData: RegisterUser) => {
+  const onSubmit = useCallback((registerData: RegisterUser) => {
     addNewUser(registerData, {
       onSuccess: () => {
         void router.push('/');
@@ -37,12 +37,14 @@ const RegisterForm: FC = () => {
         setErrorMessage(message);
       },
     });
-  };
+  }, [addNewUser, router])
 
   return (
     <form
       className="prose mt-5 flex flex-auto flex-col justify-center gap-7 md:w-1/2 xl:w-1/3"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={() => {
+        handleSubmit(onSubmit);
+      }}
     >
       <div className="card w-full bg-primary xl:mb-24">
         <div className="card-body">
@@ -112,7 +114,7 @@ const RegisterForm: FC = () => {
           </div>
 
           <div className="card-actions flex justify-between">
-            <Link href="/" className="pt-3 pb-4">
+            <Link href="/" className="pb-4 pt-3">
               Already have an account?
             </Link>
 
@@ -160,6 +162,4 @@ const RegisterForm: FC = () => {
       </div>
     </form>
   );
-};
-
-export default RegisterForm;
+}

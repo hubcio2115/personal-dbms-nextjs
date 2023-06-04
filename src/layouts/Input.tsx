@@ -1,11 +1,11 @@
-import type { PropsWithChildren, FC } from 'react';
+import type { PropsWithChildren } from 'react';
 
 interface InputProps extends PropsWithChildren {
   label: string;
   errorMessage?: string;
 }
 
-const Input: FC<InputProps> = ({ label, errorMessage, children }) => {
+export default function Input({ label, errorMessage, children }: InputProps) {
   return (
     <div className="form-control">
       <label className="label text-primary-content">
@@ -21,6 +21,4 @@ const Input: FC<InputProps> = ({ label, errorMessage, children }) => {
       </label>
     </div>
   );
-};
-
-export default Input;
+}

@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useMemo, useState, type FC } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { v5 as uuidv5 } from 'uuid';
 import {
@@ -21,7 +21,7 @@ type PersonalDataFormProps = {
   id: string;
 };
 
-const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
+export default function PersonalDataForm({ id }: PersonalDataFormProps) {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -76,9 +76,9 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
     setIsEditing((prev) => !prev);
   };
 
-  const onSubmit: SubmitHandler<PersonalDataWithoutId> = (data) => {
+  const onSubmit: SubmitHandler<PersonalDataWithoutId> = useCallback((data) => {
     updateData({ id, ...data });
-  };
+  }, [id, updateData]);
 
   const {
     register,
@@ -94,7 +94,9 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
   return (
     <form
       className="mt-5 flex flex-auto flex-col justify-center gap-6 md:w-1/2 xl:w-1/3"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={() => {
+        handleSubmit(onSubmit);
+      }}
     >
       <div className="flex justify-between">
         <Link href="/">
@@ -191,7 +193,9 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
               <Input label="Age" errorMessage={errors.age?.message}>
                 <input
                   type="number"
-                  {...register('age', { valueAsNumber: true })}
+                  {...register('age', {
+                    valueAsNumber: true,
+                  })}
                   className={clsx(
                     'input input-md flex-auto',
                     !!errors.age ? 'input-bordered input-error' : '',
@@ -253,6 +257,4 @@ const PersonalDataForm: FC<PersonalDataFormProps> = ({ id }) => {
       </div>
     </form>
   );
-};
-
-export default PersonalDataForm;
+}
