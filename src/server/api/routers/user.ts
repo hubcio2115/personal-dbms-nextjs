@@ -1,10 +1,14 @@
-import { publicProcedure, protectedProcedure, createTRPCRouter } from '../trpc';
+import {
+  publicProcedure,
+  protectedProcedure,
+  createTRPCRouter,
+} from '~/server/api/trpc';
 import { z } from 'zod';
 import {
   registerUserSchema,
   updateEmailSchema,
   updatePasswordSchema,
-} from '../../../common/validation/user';
+} from '~/common/validation/user';
 import { TRPCError } from '@trpc/server';
 import { hash } from 'argon2';
 
@@ -12,7 +16,9 @@ export const userRouter = createTRPCRouter({
   createNewUser: publicProcedure
     .input(registerUserSchema)
     .mutation(async ({ ctx, input: { password, email } }) => {
-      const isInDb = await ctx.prisma.user.findFirst({ where: { email } });
+      const isInDb = await ctx.prisma.user.findFirst({
+        where: { email },
+      });
       const passwd = await hash(password);
 
       if (isInDb === null)
@@ -87,7 +93,9 @@ export const userRouter = createTRPCRouter({
           ctx.session.user.role === 'ADMIN' ||
           user.id === ctx.session.user.userId
         ) {
-          await ctx.prisma.personalData.delete({ where: { userId: input.id } });
+          await ctx.prisma.personalData.delete({
+            where: { userId: input.id },
+          });
 
           return ctx.prisma.user.delete({
             where: { id: input.id },
