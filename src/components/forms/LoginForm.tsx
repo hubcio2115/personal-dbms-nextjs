@@ -2,10 +2,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import { type FC, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { type Login, loginSchema } from '../../common/validation/auth';
+import { type Login, loginSchema } from '~/common/validation/auth';
 import Link from 'next/link';
 import clsx from 'clsx';
-import Input from '../../layouts/Input';
+import Input from '~/layouts/Input';
 
 const LoginForm: FC = () => {
   const {

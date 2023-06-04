@@ -1,8 +1,8 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-import { prisma } from '../../../server/db';
-import { loginSchema } from '../../../common/validation/auth';
+import { prisma } from '~/server/db';
+import { loginSchema } from '~/common/validation/auth';
 import { verify } from 'argon2';
 
 export const authOptions: NextAuthOptions = {

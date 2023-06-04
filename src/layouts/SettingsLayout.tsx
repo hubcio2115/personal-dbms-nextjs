@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import Head from 'next/head';
 import Link from 'next/link';
 import type { FC, PropsWithChildren } from 'react';
-import NavBar from '../components/NavBar';
+import NavBar from '~/components/NavBar';
 
 interface SettingsLayoutProps {
   className?: string;

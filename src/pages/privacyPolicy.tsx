@@ -1,7 +1,7 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import MainLayout from '../layouts/MainLayout';
+import MainLayout from '~/layouts/MainLayout';
 
 const PrivacyPolicy: NextPage = () => (
   <MainLayout className="flex-col items-center pt-5 text-primary-content">

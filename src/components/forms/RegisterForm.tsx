@@ -7,9 +7,9 @@ import { useForm } from 'react-hook-form';
 import {
   type RegisterUser,
   registerUserSchema,
-} from '../../common/validation/user';
-import Input from '../../layouts/Input';
-import { api } from '../../utils/api';
+} from '~/common/validation/user';
+import Input from '~/layouts/Input';
+import { api } from '~/utils/api';
 
 const RegisterForm: FC = () => {
   const { mutate: addNewUser, isLoading } =

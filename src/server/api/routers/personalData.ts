@@ -1,9 +1,9 @@
-import { createTRPCRouter, protectedProcedure } from '../trpc';
+import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
 import { z } from 'zod';
 import {
   personalDataSchema,
   personalDataSchemaWithoutId,
-} from '../../../common/validation/personalData';
+} from '~/common/validation/personalData';
 import { TRPCError } from '@trpc/server';
 
 export const personalDataRouter = createTRPCRouter({

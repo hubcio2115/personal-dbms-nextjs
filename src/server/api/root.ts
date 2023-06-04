@@ -1,6 +1,6 @@
-import { createTRPCRouter } from './trpc';
-import { personalDataRouter } from './routers/personalData';
-import { userRouter } from './routers/user';
+import { createTRPCRouter } from '~/server/api/trpc';
+import { personalDataRouter } from '~/server/api/routers/personalData';
+import { userRouter } from '~/server/api/routers/user';
 
 /**
  * This is the primary router for your server.

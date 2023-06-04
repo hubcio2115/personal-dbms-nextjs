@@ -12,10 +12,10 @@ import {
   personalDataSchema,
   personalDataSchemaWithoutId,
   type PersonalDataWithoutId,
-} from '../../common/validation/personalData';
-import Input from '../../layouts/Input';
-import { api } from '../../utils/api';
-import { splitCamelCaseAndCapitalize } from '../../utils/[id]';
+} from '~/common/validation/personalData';
+import Input from '~/layouts/Input';
+import { api } from '~/utils/api';
+import { splitCamelCaseAndCapitalize } from '~/utils/[id]';
 
 type PersonalDataFormProps = {
   id: string;

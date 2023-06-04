@@ -8,10 +8,10 @@ import { useForm } from 'react-hook-form';
 import {
   personalDataSchemaWithoutId,
   type PersonalDataWithoutId,
-} from '../../common/validation/personalData';
-import Input from '../../layouts/Input';
-import SettingsLayout from '../../layouts/SettingsLayout';
-import { api } from '../../utils/api';
+} from '~/common/validation/personalData';
+import Input from '~/layouts/Input';
+import SettingsLayout from '~/layouts/SettingsLayout';
+import { api } from '~/utils/api';
 
 const PersonalData: NextPage = () => {
   const { data: personalData } = api.personalData.byUserId.useQuery();
