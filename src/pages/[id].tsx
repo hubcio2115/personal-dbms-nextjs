@@ -3,7 +3,7 @@ import type {
   GetServerSidePropsResult,
   InferGetServerSidePropsType,
 } from 'next';
-import { createProxySSGHelpers } from '@trpc/react-query/ssg';
+import { createServerSideHelpers } from '@trpc/react-query/server';
 import { appRouter } from '~/server/api/root';
 import superjson from 'superjson';
 import { createInnerTRPCContext } from '~/server/api/trpc';
@@ -14,11 +14,17 @@ import Head from 'next/head';
 import { type DehydratedState } from '@tanstack/react-query';
 import { type Session } from 'next-auth';
 
-export async function getServerSideProps  (
+export async function getServerSideProps(
   ctx: GetServerSidePropsContext<{ id: string }>,
-): Promise<GetServerSidePropsResult<{id: string, trpcState: DehydratedState, session: Session | null}>>{
+): Promise<
+  GetServerSidePropsResult<{
+    id: string;
+    trpcState: DehydratedState;
+    session: Session | null;
+  }>
+> {
   const session = await getSession(ctx);
-  const ssg = createProxySSGHelpers({
+  const ssg = createServerSideHelpers({
     router: appRouter,
     ctx: createInnerTRPCContext({ session }),
     transformer: superjson,
