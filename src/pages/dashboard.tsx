@@ -2,13 +2,13 @@ import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { clsx } from 'clsx';
 
-import PersonalDataCard from '../components/PersonalDataCard';
-import { api } from '../utils/api';
-import MainLayout from '../layouts/MainLayout';
+import PersonalDataCard from '~/components/PersonalDataCard';
+import { api } from '~/utils/api';
+import MainLayout from '~/layouts/MainLayout';
 import { getSession } from 'next-auth/react';
-import { redirectIfSession } from '../utils/redirectIfSession';
+import { redirectIfSession } from '~/utils/redirectIfSession';
 import { type ChangeEvent, useState, useRef, useMemo } from 'react';
-import { useDebounce } from '../common/hooks/useDebounce';
+import { useDebounce } from '~/common/hooks/useDebounce';
 import { v5 as uuidv5 } from 'uuid';
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
