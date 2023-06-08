@@ -23,7 +23,10 @@ export default function LoginForm() {
 
   const onSubmit = useCallback((data: Login) => {
     try {
-      void signIn('credentials', { ...data, callbackUrl: '/dashboard' });
+      void signIn('keycloak', {
+        ...data,
+        callbackUrl: '/dashboard',
+      });
     } catch (err) {
       if (process.env.NODE_ENV === 'development') console.error(err);
     }
