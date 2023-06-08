@@ -37,7 +37,7 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ ctx, input: newUser }) => {
       const isAuthorized =
         ctx.session.user.role === 'ADMIN' ||
-        ctx.session.user.userId === newUser.id;
+        ctx.session.user.id === newUser.id;
 
       if (isAuthorized) {
         const { id, email } = newUser;
@@ -67,7 +67,7 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ ctx, input: newUser }) => {
       const isAuthorized =
         ctx.session.user.role === 'ADMIN' ||
-        ctx.session.user.userId === newUser.id;
+        ctx.session.user.id === newUser.id;
 
       if (isAuthorized) {
         const { id, password } = newUser;
@@ -91,7 +91,7 @@ export const userRouter = createTRPCRouter({
       if (!!user) {
         if (
           ctx.session.user.role === 'ADMIN' ||
-          user.id === ctx.session.user.userId
+          user.id === ctx.session.user.id
         ) {
           await ctx.prisma.personalData.delete({
             where: { userId: input.id },

@@ -30,7 +30,7 @@ export default function Preferences() {
     if (
       confirm("Are you sure you want to delete this account and it's data?")
     ) {
-      deleteUser({ id: userData?.user.userId ?? '' });
+      deleteUser({ id: userData?.user.id ?? '' });
     }
   };
 
@@ -53,7 +53,7 @@ export default function Preferences() {
   });
 
   useEffect(() => {
-    emailFormReset({ id: userData?.user.userId, email: userData?.user.email });
+    emailFormReset({ id: userData?.user.id, email: userData?.user.email ?? "" });
   }, [userData, emailFormReset]);
 
   const onEmailFormSubmit = (data: UpdateEmail) => {
