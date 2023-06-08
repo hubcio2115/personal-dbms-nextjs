@@ -89,7 +89,7 @@ export default function Preferences() {
 
   useEffect(() => {
     passwordFormReset({
-      id: userData?.user.userId,
+      id: userData?.user.id,
       password: '',
     });
   }, [userData, passwordFormReset]);
