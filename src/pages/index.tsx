@@ -1,24 +1,27 @@
-import type { GetServerSidePropsContext } from 'next';
-import { getSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import Head from 'next/head';
+import Link from 'next/link';
 import MainLayout from '~/layouts/MainLayout';
-import LoginForm from '~/components/forms/LoginForm';
-import { redirectIfSession } from '~/utils/redirectIfSession';
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const session = await getSession(ctx);
-
-  return redirectIfSession(session, true, '/dashboard', ctx);
-}
 
 export default function Home() {
   return (
     <MainLayout>
       <Head>
-        <title>Login Page</title>
+        <title>Personal DBMS</title>
       </Head>
 
-      <LoginForm />
+      <main className="prose flex flex-col p-10">
+        <h1>Personal DBMS</h1>
+
+        <a
+          onClick={() => void signIn('keycloak', { callbackUrl: '/dashboard' })}
+          className='cursor-pointer'
+        >
+          Login
+        </a>
+
+        <Link href="/register">Register</Link>
+      </main>
     </MainLayout>
   );
 }
