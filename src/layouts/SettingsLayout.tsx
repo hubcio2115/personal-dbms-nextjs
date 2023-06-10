@@ -32,11 +32,7 @@ export default function SettingsLayout({
           <li>
             <Link href="/preferences/general">General</Link>
           </li>
-          <li>
-            <Link href="/preferences/technicalSupportForm">
-              Technical Support
-            </Link>
-          </li>
+
           <li>
             <Link href="/preferences/personalData">Personal Data</Link>
           </li>
