@@ -1,6 +1,5 @@
 import { signIn } from 'next-auth/react';
 import Head from 'next/head';
-import Link from 'next/link';
 import MainLayout from '~/layouts/MainLayout';
 
 export default function Home() {
@@ -19,8 +18,6 @@ export default function Home() {
         >
           Login
         </a>
-
-        <Link href="/register">Register</Link>
       </main>
     </MainLayout>
   );
