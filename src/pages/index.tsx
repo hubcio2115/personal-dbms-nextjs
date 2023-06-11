@@ -12,21 +12,17 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
 export default function Home() {
   return (
-    <MainLayout>
+    <MainLayout className="items-center justify-center">
       <Head>
         <title>Personal DBMS</title>
       </Head>
 
-      <main className="prose flex flex-col p-10">
-        <h1>Personal DBMS</h1>
-
-        <a
-          onClick={() => void signIn('keycloak', { callbackUrl: '/dashboard' })}
-          className="cursor-pointer"
-        >
-          Login
-        </a>
-      </main>
+      <button
+        onClick={() => void signIn('keycloak', { callbackUrl: '/dashboard' })}
+        className="btn-info btn w-1/12"
+      >
+        Login
+      </button>
     </MainLayout>
   );
 }
