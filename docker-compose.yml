@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 services:
   keycloak:
@@ -16,6 +16,7 @@ services:
       - 8080:8080
     depends_on:
       - db
+
   db:
     image: postgres
     environment:
