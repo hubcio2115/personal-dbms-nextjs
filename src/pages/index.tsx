@@ -1,6 +1,14 @@
-import { signIn } from 'next-auth/react';
+import { type GetServerSidePropsContext } from 'next';
+import { getSession, signIn } from 'next-auth/react';
 import Head from 'next/head';
 import MainLayout from '~/layouts/MainLayout';
+import { redirectIfSession } from '~/utils/redirectIfSession';
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = await getSession(ctx);
+
+  return redirectIfSession(session, true, '/dashboard', ctx);
+}
 
 export default function Home() {
   return (
@@ -14,7 +22,7 @@ export default function Home() {
 
         <a
           onClick={() => void signIn('keycloak', { callbackUrl: '/dashboard' })}
-          className='cursor-pointer'
+          className="cursor-pointer"
         >
           Login
         </a>
