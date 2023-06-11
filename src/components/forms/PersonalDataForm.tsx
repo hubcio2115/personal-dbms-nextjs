@@ -76,9 +76,23 @@ export default function PersonalDataForm({ id }: PersonalDataFormProps) {
     setIsEditing((prev) => !prev);
   };
 
-  const onSubmit: SubmitHandler<PersonalDataWithoutId> = useCallback((data) => {
-    updateData({ id, ...data });
-  }, [id, updateData]);
+  function displayData(valueKey: keyof PersonalData, data: PersonalData) {
+    switch (valueKey) {
+      case 'isPrivate':
+        return data.isPrivate ? '✅' : '🚫';
+      case 'maidenName':
+        return data.maidenName ?? '-';
+      default:
+        return data[valueKey];
+    }
+  }
+
+  const onSubmit: SubmitHandler<PersonalDataWithoutId> = useCallback(
+    (data) => {
+      updateData({ id, ...data });
+    },
+    [id, updateData],
+  );
 
   const {
     register,
@@ -139,11 +153,7 @@ export default function PersonalDataForm({ id }: PersonalDataFormProps) {
                   className="card-title text-primary-content"
                 >
                   {splitCamelCaseAndCapitalize(valueKey)}:{' '}
-                  {valueKey === 'isPrivate'
-                    ? data.isPrivate
-                      ? '✅'
-                      : '🚫'
-                    : data[valueKey]}
+                  {displayData(valueKey, data)}
                 </p>,
               ];
             }, [])
