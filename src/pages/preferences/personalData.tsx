@@ -65,11 +65,7 @@ export default function PersonalData() {
 
       <div className="divider" />
 
-      <form
-        onSubmit={() => {
-          handleSubmit(onSubmit);
-        }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Input label="First Name" errorMessage={errors.firstName?.message}>
           <input
             type="text"
