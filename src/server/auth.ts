@@ -27,11 +27,19 @@ declare module 'next-auth' {
     role: UserRole;
     // provider: string;
   }
+
+  interface Profile {
+    realm_access: {
+      roles: string[];
+    };
+  }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
+    id: string;
     id_token: string;
+    role: UserRole;
   }
 }
 
@@ -47,8 +55,7 @@ export const authOptions: NextAuthOptions = {
   },
   secret: env.NEXTAUTH_SECRET,
   callbacks: {
-    jwt({ token, user, account }) {
-      console.log(user);
+    jwt({ token, user, account, profile }) {
       if (!!account && !!account.id_token) {
         token.id_token = account.id_token;
       }
@@ -56,10 +63,21 @@ export const authOptions: NextAuthOptions = {
       if (!!user) {
         token.id = user.id;
         token.email = user.email;
-        token.role = user.role;
+      }
+
+      if (!!profile) {
+        token.role = profile.realm_access.roles.includes('admin')
+          ? 'ADMIN'
+          : 'USER';
       }
 
       return token;
+    },
+    session({ token, session }) {
+      session.user.id = token.id;
+      session.user.role = token.role;
+
+      return session;
     },
   },
   jwt: {
