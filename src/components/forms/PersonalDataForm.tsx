@@ -102,7 +102,7 @@ export default function PersonalDataForm({ id }: PersonalDataFormProps) {
         </Link>
 
         {(sessionData?.user.role === 'ADMIN' ||
-          data?.userId === sessionData?.user.userId) && (
+          data?.userId === sessionData?.user.id) && (
           <div className="flex gap-3 justify-self-end">
             <button
               className="btn-success btn"

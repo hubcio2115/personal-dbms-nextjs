@@ -1,18 +1,18 @@
 import { z } from 'zod';
 
-const requiredErrorMessage = 'This field cannot be empty!';
-const negativeErrorMessage = 'This value has to be positive!';
+const REQUIRED_ERROR_MESSAGE = 'This field cannot be empty!';
+const NEGATIVE_ERROR_MESSAGE = 'This value has to be positive!';
 
 export const personalDataSchema = z.object({
   id: z.string(),
-  firstName: z.string().min(1, requiredErrorMessage),
-  lastName: z.string().min(1, requiredErrorMessage),
-  maidenName: z.string().min(1, requiredErrorMessage),
-  age: z.number().min(0, negativeErrorMessage),
+  firstName: z.string().min(1, REQUIRED_ERROR_MESSAGE),
+  lastName: z.string().min(1, REQUIRED_ERROR_MESSAGE),
+  maidenName: z.string().nullable(),
+  age: z.number().min(0, NEGATIVE_ERROR_MESSAGE),
   sex: z.enum(['female', 'male']),
-  phone: z.string().min(1, requiredErrorMessage),
+  phone: z.string().min(1, REQUIRED_ERROR_MESSAGE),
   isPrivate: z.boolean(),
-  userId: z.string().optional(),
+  userId: z.string(),
 });
 export type PersonalDataSchema = z.infer<typeof personalDataSchema>;
 

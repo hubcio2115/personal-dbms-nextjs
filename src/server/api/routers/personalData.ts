@@ -18,10 +18,7 @@ export const personalDataRouter = createTRPCRouter({
             where: {
               AND: [
                 {
-                  OR: [
-                    { isPrivate: false },
-                    { userId: ctx.session.user.userId },
-                  ],
+                  OR: [{ isPrivate: false }, { userId: ctx.session.user.id }],
                 },
                 { firstName: { contains: searchParams } },
               ],
@@ -40,7 +37,7 @@ export const personalDataRouter = createTRPCRouter({
         if (
           ctx.session.user.role === 'ADMIN' ||
           !data.isPrivate ||
-          data.userId === ctx.session.user.userId
+          data.userId === ctx.session.user.id
         )
           return data;
 
@@ -53,7 +50,7 @@ export const personalDataRouter = createTRPCRouter({
   byUserId: protectedProcedure.query(
     async ({ ctx }) =>
       await ctx.prisma.personalData.findFirst({
-        where: { userId: ctx.session.user.userId },
+        where: { userId: ctx.session.user.id },
       }),
   ),
 
@@ -67,7 +64,7 @@ export const personalDataRouter = createTRPCRouter({
       if (!!data) {
         if (
           ctx.session.user.role === 'ADMIN' ||
-          data.userId === ctx.session.user.userId
+          data.userId === ctx.session.user.id
         )
           return ctx.prisma.personalData.delete({
             where: { id: input.id },
@@ -89,7 +86,7 @@ export const personalDataRouter = createTRPCRouter({
       if (!!serverVersion) {
         if (
           ctx.session.user.role === 'ADMIN' ||
-          serverVersion.userId === ctx.session.user.userId
+          serverVersion.userId === ctx.session.user.id
         ) {
           return ctx.prisma.personalData.update({
             where: { id },
@@ -113,7 +110,7 @@ export const personalDataRouter = createTRPCRouter({
       if (!!foundUser && !!data.userId) {
         if (
           ctx.session.user.role === 'ADMIN' ||
-          foundUser.id === ctx.session.user.userId
+          foundData.userId === ctx.session.user.id
         )
           return ctx.prisma.personalData.upsert({
             where: { userId: foundUser.id },

@@ -51,7 +51,7 @@ export default function PersonalData() {
 
   useEffect(() => {
     if (!!userData) {
-      reset({ userId: userData.user.userId });
+      reset({ userId: userData.user.id });
     }
   }, [reset, userData]);
 
