@@ -154,17 +154,6 @@ export default function PrivacyPolicy() {
           These changes are effective immediately, after they are posted on this
           page.
         </p>
-
-        <h2>Contact Us</h2>
-
-        <p>
-          If you have any questions or suggestions about our Privacy Policy, do
-          not hesitate to{' '}
-          <Link href="/contactUs" className="text-base-content">
-            contact us
-          </Link>
-          .
-        </p>
       </article>
     </MainLayout>
   );
