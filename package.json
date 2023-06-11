@@ -19,7 +19,6 @@
     "@trpc/next": "^10.29.0",
     "@trpc/react-query": "^10.29.0",
     "@trpc/server": "^10.29.0",
-    "argon2": "^0.30.3",
     "clsx": "^1.2.1",
     "daisyui": "^2.52.0",
     "next": "13.4.4",
