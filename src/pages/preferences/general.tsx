@@ -1,5 +1,6 @@
 import type { GetServerSidePropsContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
+import Link from 'next/link';
 import SettingsLayout from '~/layouts/SettingsLayout';
 import { redirectIfSession } from '~/utils/redirectIfSession';
 
@@ -19,6 +20,10 @@ export default function Preferences() {
       <div className="divider">Email</div>
 
       <p>{userData?.user.email}</p>
+
+      <h2>Info</h2>
+
+      <Link href="/privacyPolicy">privacy policy</Link>
     </SettingsLayout>
   );
 }
