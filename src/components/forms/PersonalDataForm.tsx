@@ -54,13 +54,13 @@ export default function PersonalDataForm({ id }: PersonalDataFormProps) {
       },
     });
 
-  const deleteValue = () => {
+  function deleteValue() {
     if (confirm('Czy na pewno chcesz usunąć zasób?')) {
       deleteData({ id });
     }
-  };
+  }
 
-  const toggleIsEditing = () => {
+  function toggleIsEditing() {
     if (!!data) {
       const { id: _dataId, ...newDefaultValues } =
         personalDataSchema.parse(data);
@@ -74,7 +74,7 @@ export default function PersonalDataForm({ id }: PersonalDataFormProps) {
     }
 
     setIsEditing((prev) => !prev);
-  };
+  }
 
   function displayData(valueKey: keyof PersonalData, data: PersonalData) {
     switch (valueKey) {

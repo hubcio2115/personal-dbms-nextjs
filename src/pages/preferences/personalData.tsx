@@ -55,9 +55,9 @@ export default function PersonalData() {
     }
   }, [reset, userData]);
 
-  const onSubmit = (data: PersonalDataWithoutId) => {
+  function onSubmit(data: PersonalDataWithoutId) {
     upsertPersonalData(data);
-  };
+  }
 
   return (
     <SettingsLayout>
