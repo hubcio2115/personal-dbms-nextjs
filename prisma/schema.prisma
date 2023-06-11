@@ -21,10 +21,10 @@ enum Sex {
 }
 
 model PersonalData {
-  id         String  @id @default(cuid())
+  id         String  @id @unique @default(uuid())
   firstName  String
   lastName   String
-  maidenName String
+  maidenName String?
   age        Int
   sex        Sex
   phone      String
