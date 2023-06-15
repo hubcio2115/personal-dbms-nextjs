@@ -52,33 +52,33 @@ You can use preferable node package manager (it is recommended you use `pnpm`). 
 
 Npm:
 
-developer
+- developer
 ```bash
 npm run dev
 ```
-production
+- production
 ```bash
 npm run build && npm run start
 ```
 
 Yarn:
 
-developer
+- developer
 ```bash
 yarn dev
 ```
-production
+- production
 ```bash
 yarn build && yarn start
 ```
 
 Pnpm:
 
-developer
+- developer
 ```bash
 pnpm dev
 ```
-production
+- production
 ```bash
 pnpm build && pnpm start
 ```
