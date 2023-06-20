@@ -83,6 +83,12 @@ pnpm dev
 pnpm build && pnpm start
 ```
 
+### If db panics because of missing files
+
+In `postgres-data` there could be empty directories, which are not tracked by git but are required by db container to run. To fix that move data from `postgres-data` somewhere else, run the `docker-compose`, shut the containers down, replace duplicate files in `postgres-data` with the original files downloaded from the repository.
+
+This should fix the issue.
+
 # Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
