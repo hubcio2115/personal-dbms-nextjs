@@ -38,13 +38,13 @@ export default function Dashboard() {
   const numberPerPage = useRef(12);
 
   const slicedData = useMemo(
-    () =>
-      !!data && !!data.length
-        ? data.slice(
+    () => {
+        if (!data && !data.length) return [];
+        return data.slice(
             currentPage * numberPerPage.current,
             (currentPage + 1) * numberPerPage.current,
-          )
-        : [],
+        );
+    },
     [currentPage, numberPerPage, data],
   );
 
